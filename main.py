@@ -1,6 +1,7 @@
 import os
 from datetime import date
 from prettytable import PrettyTable
+from prettytable import SINGLE_BORDER
 from prettytable import DOUBLE_BORDER
 
 # Combo Menu Configuration
@@ -15,16 +16,29 @@ receipt.set_style(DOUBLE_BORDER)
 receipt.title = f'RECEIPT | {today.month}/{today.day}/{today.year}'
 receipt.field_names = ['TYPE', 'NAME', 'SIZE', 'PRICE']
 
+# Error Setup/Configuration
+error = PrettyTable()
+error.set_style(SINGLE_BORDER)
+error.title = 'ERROR'
+error.field_names = ['TYPE', 'NEEDED PARAMETERS']
+
 # Global Functions
 def clear_console():
   os.system('cls')
   os.system('clear')
 
-def underline(text):
-	# Underline start: \033[4m
-	# Underline end: \033[0m
-	return f'\033[4m{text}\033[0m'
+class style_text:
+    PASS = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    BOLD_UNDERLINE = '\033[1m\033[4m'
 
+def apply_text_style(type, text):
+    style_map = {'PASS': style_text.PASS, 'WARNING': style_text.WARNING, 'FAIL': style_text.FAIL, 'BOLD': style_text.BOLD, 'UNDERLINE': style_text.UNDERLINE, 'BOLD_UNDERLINE': style_text.BOLD_UNDERLINE}
+    return f'{style_map.get(type, "") + text + style_text.ENDC}'
 
 def addToCart(item_type, item_name, items_list, items_sizes, items_prices):
 	global cart_total_cost
@@ -86,32 +100,37 @@ class fries:
 
 
 # Sandwitch Selection
-def sandwitch_selection():
-	print(f'Options: \n- {underline("Y")}es\n- {underline("N")}o')
-	sandwitch_agreement = input('Would you like a sandwitch? ')
-	if 'yes' in sandwitch_agreement.lower() or sandwitch_agreement.lower() == 'y':
-		print(f'Options: \n- {underline("C")}hicken\n- {underline("B")}eef\n- {underline("T")}ofu')
-		sandwitch_selected = input('What type of sandwitch would you like? ')
-		if 'c' in sandwitch_selected.lower() or 'chicken' in sandwitch_selected.lower():
-			sandwitch_selected = 'chicken'
-		elif 'b' in sandwitch_selected.lower() or 'beef' in sandwitch_selected.lower():
-			sandwitch_selected = 'beef'
-		elif 't' in sandwitch_selected.lower() or 'tofu' in sandwitch_selected.lower():
-			sandwitch_selected = 'tofu'
-		if 'chicken' in sandwitch_selected.lower() or 'beef' in sandwitch_selected.lower() or 'tofu' in sandwitch_selected.lower():
-			addToCart(sandwitchs.type, sandwitch_selected, sandwitchs.names, sandwitchs.sizes, sandwitchs.prices)
+def sandwitch_selection(stage):
+	if stage == 'agreement':
+		sandwitch_agreement = input(f'Would you like a sandwitch? ({apply_text_style("BOLD_UNDERLINE", "Y")}es | {apply_text_style("BOLD_UNDERLINE", "N")}o) ')
+		if 'yes' in sandwitch_agreement.lower() or sandwitch_agreement.lower() == 'y':
+			sandwitch_selection('choose')
+		elif 'no' in sandwitch_agreement.lower() or sandwitch_agreement.lower() == 'n':
 			beverage_selection()
 		else:
-			sandwitch_selected = input('What type of sandwitch would you like? ')
-	elif 'no' in sandwitch_agreement.lower() or sandwitch_agreement.lower() == 'n':
+			error.add_row(['INPUT', '[C, Chicken, B, Beef, T, Tofu]'])
+			print(error)
+			sandwitch_selection('agreement')
+	elif stage == 'choose':
+		print(f'Options: \n- {apply_text_style("BOLD_UNDERLINE", "C")}hicken\n- {apply_text_style("BOLD_UNDERLINE", "B")}eef\n- {apply_text_style("BOLD_UNDERLINE", "T")}ofu')
+		sandwitch_selected = input('What type of sandwitch would you like? ')
+		if sandwitch_selected.lower() == 'c' or 'chicken' in sandwitch_selected.lower():
+			sandwitch_selected = 'chicken'
+		elif sandwitch_selected.lower() == 'b' or 'beef' in sandwitch_selected.lower():
+			sandwitch_selected = 'beef'
+		elif sandwitch_selected.lower() == 't' or 'tofu' in sandwitch_selected.lower():
+			sandwitch_selected = 'tofu'
+		else:
+			print('ERROR')
+			print(error)
+			sandwitch_selection('choose')
+		addToCart(sandwitchs.type, sandwitch_selected, sandwitchs.names, sandwitchs.sizes, sandwitchs.prices)
 		beverage_selection()
-	else:
-		print('ERROR')
 
 
 # Drink Selection
 def beverage_selection():
-	print(f'Options: \n- {underline("Y")}es\n- {underline("N")}o')
+	print(f'Options: \n- {apply_text_style("BOLD_UNDERLINE", "Y")}es\n- {apply_text_style("BOLD_UNDERLINE", "N")}o')
 	beverage_agreement = input('Whould you like a beverage? ')
 	if 'yes' in beverage_agreement.lower() or beverage_agreement.lower() == 'y':
 		beverage_size = input('What size of beverage? ')
@@ -121,7 +140,7 @@ def beverage_selection():
 	else:
 	  print('ERROR')
 
-sandwitch_selection()
+sandwitch_selection('agreement')
 
 # Fries Selection
 #fries_agreement = input('Would you like fries? ')
