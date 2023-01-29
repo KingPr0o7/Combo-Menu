@@ -104,7 +104,7 @@ def error_handle(type, item_type, user_input):
 
 def addToCart(item_type, item_name, items_list, items_sizes, items_prices):
 	global cart_total_cost
-	if item_type == 'Beverage':
+	if item_type == 'Beverage' or item_type == 'Side':
 		for index, item in enumerate(items_sizes):
 			if str(item_name).lower().strip() == str(items_sizes[index]).lower().strip():
 				cart_items.append(item)
@@ -173,6 +173,12 @@ class fries:
 	sizes = ['Small', 'Medium', 'Large']
 	prices = ['1.00', '1.50', '2.00']
 
+def friesTable():
+	options.clear_rows()
+	options.title = format_str('BOLD', 'FRIES OPTIONS')
+	for index in range(len(fries.sizes)):
+		options.add_row([fries.names, format_str('BOLD_UNDERLINE', fries.sizes[index][0]) + fries.sizes[index][1:], '$' + fries.prices[index]])
+	print(options)
 
 # Sandwitch Selection
 def sandwitch_selection(stage):
@@ -225,21 +231,47 @@ def beverage_selection(stage):
 			error_handle('food selection', 'beverage', beverage_size)
 			beverage_selection('choose')
 		addToCart(beverages.type, beverage_size_selected, beverages.names, beverages.sizes, beverages.prices)
-
-sandwitch_selection('agreement')
+		fries_selection('agreement')
 
 # Fries Selection
-#fries_agreement = input('Would you like fries? ')
-#if (fries_agreement.lower().strip() in ['yes','y']):
-#	fries_size = input('What size of fries? ')
-#	if fries_size.lower().strip() == 'small':
-#		fries_upgrade = input('Would you like to mega-size your fries? ')
-#		if fries_upgrade.lower().strip() in ['yes','y']:
-#add cart
-#		if fries_upgrade.lower().strip() in ['no','n']:
-#add cart
-#	else:
-#add cart
+def fries_selection(stage):
+	fries_size_selected = None
+	if stage == 'agreement':
+		fries_agreement = input(f'Would you like some fries? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
+		if 'yes' in fries_agreement.lower().strip() or fries_agreement.lower().strip() == 'y':
+			fries_selection('choose')
+		elif 'no' in fries_agreement.lower().strip() or fries_agreement.lower().strip() == 'n':
+			print('KETCHUP')
+		else:
+			error_handle('yes no', 'fries', fries_agreement)
+			fries_selection('agreement')
+	if stage == 'choose':
+		friesTable()
+		fries_size = input('What size of fries? ')
+		if fries_size.lower().strip() == 's' or 'small' in fries_size.lower().strip():
+			fries_selection('upgrade')
+		elif fries_size.lower().strip() == 'm' or 'medium' in fries_size.lower().strip():
+			fries_size_selected = 'medium'
+		elif fries_size.lower().strip() == 'l' or 'large' in fries_size.lower().strip():
+			fries_size_selected = 'large'
+		else:
+			error_handle('food selection', 'fries', fries_size)
+			fries_selection('choose')
+		if fries_size_selected is not None:
+			addToCart(fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
+			print('KETCHUP')
+	if stage == 'upgrade':
+		fries_upgrade = input('Would you like to mega-size your fries? ')
+		if 'yes' in fries_upgrade.lower().strip() or fries_upgrade.lower().strip() == 'y':
+			fries_size_selected = 'large'
+		elif 'no' in fries_upgrade.lower().strip() or fries_upgrade.lower().strip() == 'n':
+			fries_size_selected = 'small'
+		else:
+			error_handle('yes no', 'fries', fries_upgrade)
+			fries_selection('upgrade')
+		addToCart(fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
+
+sandwitch_selection('agreement')
 
 # Ketchup Selection
 #ketchup_ask = input('How many ketchup packets do you want? ')
