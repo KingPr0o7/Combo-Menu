@@ -1,20 +1,57 @@
 import os
 import time
+import re
 from datetime import date
 from prettytable import PrettyTable
 from prettytable import SINGLE_BORDER
 from prettytable import DOUBLE_BORDER
 
-# Combo Menu Configuration
+#
+# Settings / Configuration
+#
+
+# Used for clearing the console. (Replit uses Linux) 
+system = 'Windows'
+
+# Combo Menu Setup
 cart_items = []
+cart_item_types = []
 cart_item_prices = []
 cart_total_cost = 0
 
-# Global Functions
-def clear_console():
-	os.system('cls')
-	#os.system('clear')
+# Menu Items
+class sandwichs:
+	type = 'Sandwich'
+	names = ['Chicken', 'Beef', 'Tofu']
+	sizes = 'Regular'
+	prices = ['5.25', '6.25', '5.75']
 
+class beverages:
+	type = 'Beverage'
+	names = 'Fountain'
+	sizes = ['Small', 'Medium', 'Large']
+	prices = ['1.00', '1.75', '2.25']
+
+class fries:
+	type = 'Side'
+	names = 'Fries'
+	sizes = ['Small', 'Medium', 'Large']
+	prices = ['1.00', '1.50', '2.00']
+
+class ketchup:
+    type = 'Extra'
+    names = 'Ketchup'
+    sizes = 'Regular'
+    prices = 0.25
+
+# Global Functions
+def clear_console(system):
+	if str(system).lower() == 'windows' or str(system).lower() == 'win':
+		os.system('cls')
+	elif str(system).lower() == 'linux':
+		os.system('clear')
+
+# String Formatter (Colors & Display Style)
 class str_format:
     # Single
 	PASS = '\033[92m'
@@ -59,19 +96,22 @@ def format_str(style, text):
     }
 	return f'{style_map.get(style, "") + text + str_format.END}'
 
-# Receipt Setup/Configuration
+#
+# Information Display Table(s) (IDF(s)) [Prettytables]
+#
+
 receipt = PrettyTable()
 today = date.today()
 receipt.set_style(DOUBLE_BORDER)
-receipt.title = f'{format_str("BOLD", f"RECEIPT | {today.month}/{today.day}/{today.year}")}'
-receipt.field_names = [f'{format_str("BOLD", "TYPE")}', f'{format_str("BOLD", "NAME")}', f'{format_str("BOLD", "SIZE")}', f'{format_str("BOLD", "PRICE")}']
+receipt.title = format_str("BOLD", f"RECEIPT | {today.month}/{today.day}/{today.year}")
+receipt.field_names = [format_str("BOLD", "QUANTITY"), format_str("BOLD", "TYPE"), format_str("BOLD", "NAME"), format_str("BOLD", "SIZE"), format_str("BOLD", "PRICE")]
 
 # Options Table (Setup/Configuration)
 options = PrettyTable()
 options.set_style(SINGLE_BORDER)
 options.title = 'ITEM OPTIONS'
-options.field_names = [f'{format_str("BOLD", "NAME")}', f'{format_str("BOLD", "SIZE")}', f'{format_str("BOLD", "PRICE")}']
-options.sortby = f'{format_str("BOLD", "PRICE")}'
+options.field_names = [format_str("BOLD", "QUANTITY"), format_str("BOLD", "NAME"), format_str("BOLD", "SIZE"), format_str("BOLD", "PRICE")]
+options.sortby = format_str("BOLD", "PRICE")
 options.reversesort = True
 
 # Error Setup/Configuration
@@ -80,141 +120,168 @@ error.set_style(SINGLE_BORDER)
 error.title = format_str('FAIL_BOLD', 'TYPE ERROR')
 error.field_names = [format_str('BOLD', 'TYPE'), format_str('BOLD', 'REQUIRED ARGUMENTS')]
 
-
+#
+# Error Handling (via a IDF)
+#
 
 def error_handle(type, item_type, user_input):
-	clear_console()
+	clear_console(system)
 	error.clear_rows()
 	if type == 'yes no':
 		error.add_row(['STRING', format_str('PASS_BOLD_UNDERLINE', 'Y') + ' or ' + format_str('PASS_BOLD_UNDERLINE', 'YES')])
 		error.add_row(['STRING', format_str('PASS_BOLD_UNDERLINE', 'N') + ' or ' + format_str('PASS_BOLD_UNDERLINE', 'NO')])
 	elif type == 'food selection':
-		if item_type == 'sandwitch':
-			item_list = sandwitchs.names
+		if item_type == 'sandwich':
+			item_list = sandwichs.names
 		elif item_type == 'beverage':
 			item_list = beverages.sizes
 		elif item_type == 'fries':
 			item_list = fries.sizes
 		for index in range(len(item_list)):
 			error.add_row(['STRING', f'{format_str("PASS_BOLD_UNDERLINE", item_list[index][0])} or {format_str("PASS_BOLD_UNDERLINE", item_list[index])}'])
+	elif type == 'food amount':
+		error.add_row(['INTEGER', format_str('PASS_BOLD_UNDERLINE', '>=1 && !== 0')])
 	print(error)
 	print('You entered:', format_str("FAIL", user_input))
 	time.sleep(5)
-	clear_console()
+	clear_console(system)
 
-def addToCart(item_type, item_name, items_list, items_sizes, items_prices):
+#
+# Shopping Cart (via a IDF)
+#
+
+def addToCart(item_quantity, item_type, item_name, items_list, items_sizes, items_prices):
 	global cart_total_cost
 	if item_type == 'Beverage' or item_type == 'Side':
 		for index, item in enumerate(items_sizes):
 			if str(item_name).lower().strip() == str(items_sizes[index]).lower().strip():
 				cart_items.append(item)
+				cart_item_types.append(item_type)
 				item_price = items_prices[index]
 				cart_item_prices.append(items_prices[index])
 				cart_total_cost += float(items_prices[index])
-				clear_console()
+				clear_console(system)
 				if len(receipt.rows) >= 2:
 					receipt.del_row(-1)
 					receipt.del_row(-1)
-				receipt.add_row([
-					str(item_type).upper(), str(items_list), str(items_sizes[index]), '$' + str(item_price)])
-				receipt.add_row(['', '', '', ''])
-				receipt.add_row(['TOTAL', '', '', '$' + "{:.2f}".format(cart_total_cost)])
+				receipt.add_row([item_quantity, str(item_type).upper(), str(items_list), str(items_sizes[index]), '$' + "{:.2f}".format(float(item_price))])
+				receipt.add_row(['', '', '', '', ''])
+				receipt.add_row([format_str('BOLD', 'TOTAL'), '', '', '', format_str('BOLD', f'${"{:.2f}".format(cart_total_cost)}')])
 				print(receipt)
-	else:
+	elif item_type == 'Sandwich':
 		for index, item in enumerate(items_list):
 			if str(item_name).lower().strip() == str(items_list[index]).lower().strip():
 				cart_items.append(item)
+				cart_item_types.append(item_type)
 				item_price = items_prices[index]
 				cart_item_prices.append(items_prices[index])
 				cart_total_cost += float(items_prices[index])
-				clear_console()
+				clear_console(system)
 				if len(receipt.rows) >= 2:
 					receipt.del_row(-1)
 					receipt.del_row(-1)
-				receipt.add_row([str(item_type).upper(), str(item), str(items_sizes), '$' + str(item_price)])
-				receipt.add_row(['', '', '', ''])
-				receipt.add_row(['TOTAL', '', '', '$' + "{:.2f}".format(cart_total_cost)])
+				receipt.add_row([item_quantity, str(item_type).upper(), str(item), str(items_sizes), '$' + "{:.2f}".format(float(item_price))])
+				receipt.add_row(['', '', '', '', ''])
+				receipt.add_row([format_str('BOLD', 'TOTAL'), '', '', '', format_str('BOLD', f'${"{:.2f}".format(cart_total_cost)}')])
 				print(receipt)
+	# Extras
+	else:
+		discount = None
+		cart_items.append(item_name)
+		cart_item_types.append(item_type)
+		item_price = float(items_prices) * int(item_quantity)
+		cart_item_prices.append(item_price)
+		cart_total_cost += float(item_price)
+		clear_console(system)
+		if len(receipt.rows) >= 2:
+			receipt.del_row(-1)
+			receipt.del_row(-1)     
+		receipt.add_row([item_quantity, str(item_type).upper(), item_name, items_sizes, '$' + "{:.2f}".format(float(item_price))])
+		if 'Sandwich' in cart_item_types:
+			if 'Beverage' in cart_item_types:
+				if 'Side' in cart_item_types:
+					cart_total_cost -= 1.00
+					discount = True
+					receipt.add_row(['', '', '', '', ''])
+					receipt.add_row([format_str('UNDERLINE', 'DISCOUNT'), '', '', '', format_str('UNDERLINE', '$1.00')])		
+		if discount is None:
+			receipt.add_row(['', '', '', '', ''])
+		receipt.add_row([format_str('BOLD', 'TOTAL'), '', '', '', format_str('BOLD', f'${"{:.2f}".format(cart_total_cost)}')])
+		print(receipt)
 
+def request_receipt():
+	clear_console(system)
+	print(receipt)
 
-# Sandwitch Configuration
-class sandwitchs:
-	type = 'Sandwitch'
-	names = ['Chicken', 'Beef', 'Tofu']
-	sizes = 'Regular'
-	prices = ['5.25', '6.25', '5.75']
+#
+# Menu Item IDFs
+#
 
-def sandwitchTable():
+def sandwichTable():
 	options.clear_rows()
-	options.title = format_str('BOLD', 'SANDWITCH OPTIONS')
-	for index in range(len(sandwitchs.names)):
-		options.add_row([format_str('BOLD_UNDERLINE', sandwitchs.names[index][0]) + sandwitchs.names[index][1:], sandwitchs.sizes, '$' + sandwitchs.prices[index]])
+	options.title = format_str('BOLD', 'SANDWICH OPTIONS')
+	for index in range(len(sandwichs.names)):
+		options.add_row([1, format_str('BOLD_UNDERLINE', sandwichs.names[index][0]) + sandwichs.names[index][1:], sandwichs.sizes, '$' + sandwichs.prices[index]])
 	print(options)
 	print(format_str('WARNING_BOLD_UNDERLINE', 'You can type the whole name or just the first letter!'))
-
-# Beverage Configuration
-class beverages:
-	type = 'Beverage'
-	names = 'Fountain'
-	sizes = ['Small', 'Medium', 'Large']
-	prices = ['1.00', '1.75', '2.25']
 
 def beverageTable():
 	options.clear_rows()
 	options.title = format_str('BOLD', 'BEVERAGE OPTIONS')
 	for index in range(len(beverages.sizes)):
-		options.add_row([beverages.names, format_str('BOLD_UNDERLINE', beverages.sizes[index][0]) + beverages.sizes[index][1:], '$' + beverages.prices[index]])
+		options.add_row([1, beverages.names, format_str('BOLD_UNDERLINE', beverages.sizes[index][0]) + beverages.sizes[index][1:], '$' + beverages.prices[index]])
 	print(options)
-
-# Fries Configuration
-class fries:
-	type = 'Side'
-	names = 'Fries'
-	sizes = ['Small', 'Medium', 'Large']
-	prices = ['1.00', '1.50', '2.00']
 
 def friesTable():
 	options.clear_rows()
 	options.title = format_str('BOLD', 'FRIES OPTIONS')
 	for index in range(len(fries.sizes)):
-		options.add_row([fries.names, format_str('BOLD_UNDERLINE', fries.sizes[index][0]) + fries.sizes[index][1:], '$' + fries.prices[index]])
+		options.add_row([1, fries.names, format_str('BOLD_UNDERLINE', fries.sizes[index][0]) + fries.sizes[index][1:], '$' + fries.prices[index]])
 	print(options)
 
-# Sandwitch Selection
-def sandwitch_selection(stage):
+def ketchupTable():
+	options.clear_rows()
+	options.title = format_str('BOLD', 'KETCHUP OPTIONS')
+	options.add_row([format_str('BOLD_UNDERLINE', '>=1 && !== 0'), fries.names, ketchup.sizes, '$' + str(ketchup.prices) + 'ea'])
+	print(options)
+
+#
+# Menu Item Ordering
+#
+
+def sandwich_selection(stage):
 	if stage == 'agreement':
-		sandwitch_agreement = input(f'Would you like a sandwitch? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
-		if 'yes' in sandwitch_agreement.lower().strip() or sandwitch_agreement.lower().strip() == 'y':
-			sandwitch_selection('choose')
-		elif 'no' in sandwitch_agreement.lower().strip() or sandwitch_agreement.lower().strip() == 'n':
+		sandwich_agreement = input(f'Would you like a sandwich? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
+		if 'yes' in sandwich_agreement.lower().strip() or sandwich_agreement.lower().strip() == 'y':
+			sandwich_selection('choose')
+		elif 'no' in sandwich_agreement.lower().strip() or sandwich_agreement.lower().strip() == 'n':
 			beverage_selection()
 		else:
-			error_handle('yes no', 'sandwitch', sandwitch_agreement)
-			sandwitch_selection('agreement')
+			error_handle('yes no', 'sandwich', sandwich_agreement)
+			sandwich_selection('agreement')
 	elif stage == 'choose':
-		sandwitchTable()
-		sandwitch_selected = input('What type of sandwitch would you like? ')
-		if sandwitch_selected.lower().strip() == 'c' or 'chicken' in sandwitch_selected.lower().strip():
-			sandwitch_selected = 'chicken'
-		elif sandwitch_selected.lower().strip() == 'b' or 'beef' in sandwitch_selected.lower().strip():
-			sandwitch_selected = 'beef'
-		elif sandwitch_selected.lower().strip() == 't' or 'tofu' in sandwitch_selected.lower().strip():
-			sandwitch_selected = 'tofu'
+		sandwichTable()
+		sandwich_selected = input('What type of sandwich would you like? ')
+		if sandwich_selected.lower().strip() == 'c' or 'chicken' in sandwich_selected.lower().strip():
+			sandwich_selected = 'chicken'
+		elif sandwich_selected.lower().strip() == 'b' or 'beef' in sandwich_selected.lower().strip():
+			sandwich_selected = 'beef'
+		elif sandwich_selected.lower().strip() == 't' or 'tofu' in sandwich_selected.lower().strip():
+			sandwich_selected = 'tofu'
 		else:
-			error_handle('food selection', 'sandwitch', sandwitch_selected)
-			sandwitch_selection('choose')
-		addToCart(sandwitchs.type, sandwitch_selected, sandwitchs.names, sandwitchs.sizes, sandwitchs.prices)
+			error_handle('food selection', 'sandwich', sandwich_selected)
+			sandwich_selection('choose')
+		addToCart(1, sandwichs.type, sandwich_selected, sandwichs.names, sandwichs.sizes, sandwichs.prices)
 		beverage_selection('agreement')
 
-
-# Drink Selection
 def beverage_selection(stage):
+	global beverage_size_selected
 	if stage == 'agreement':
 		beverage_agreement = input(f'Would you like a beverage? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
 		if 'yes' in beverage_agreement.lower().strip() or beverage_agreement.lower().strip() == 'y':
 			beverage_selection('choose')
 		elif 'no' in beverage_agreement.lower().strip() or beverage_agreement.lower().strip() == 'n':
-			print('FRIES')
+			fries_selection('agreement')
 		else:
 			error_handle('yes no', 'beverage', beverage_agreement)
 			beverage_selection('agreement')
@@ -230,10 +297,9 @@ def beverage_selection(stage):
 		else:
 			error_handle('food selection', 'beverage', beverage_size)
 			beverage_selection('choose')
-		addToCart(beverages.type, beverage_size_selected, beverages.names, beverages.sizes, beverages.prices)
+		addToCart(1, beverages.type, beverage_size_selected, beverages.names, beverages.sizes, beverages.prices)
 		fries_selection('agreement')
 
-# Fries Selection
 def fries_selection(stage):
 	fries_size_selected = None
 	if stage == 'agreement':
@@ -241,7 +307,7 @@ def fries_selection(stage):
 		if 'yes' in fries_agreement.lower().strip() or fries_agreement.lower().strip() == 'y':
 			fries_selection('choose')
 		elif 'no' in fries_agreement.lower().strip() or fries_agreement.lower().strip() == 'n':
-			print('KETCHUP')
+			ketchup_selection('agreement')
 		else:
 			error_handle('yes no', 'fries', fries_agreement)
 			fries_selection('agreement')
@@ -258,8 +324,8 @@ def fries_selection(stage):
 			error_handle('food selection', 'fries', fries_size)
 			fries_selection('choose')
 		if fries_size_selected is not None:
-			addToCart(fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
-			print('KETCHUP')
+			addToCart(1, fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
+			ketchup_selection('agreement')
 	if stage == 'upgrade':
 		fries_upgrade = input('Would you like to mega-size your fries? ')
 		if 'yes' in fries_upgrade.lower().strip() or fries_upgrade.lower().strip() == 'y':
@@ -269,12 +335,36 @@ def fries_selection(stage):
 		else:
 			error_handle('yes no', 'fries', fries_upgrade)
 			fries_selection('upgrade')
-		addToCart(fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
+		addToCart(1, fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
 
-sandwitch_selection('agreement')
+def ketchup_selection(stage):
+	if stage == 'agreement':
+		ketchup_agreement = input(f'Would you like some ketchup? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
+		if 'yes' in ketchup_agreement.lower().strip() or ketchup_agreement.lower().strip() == 'y':
+			ketchup_selection('choose')
+		elif 'no' in ketchup_agreement.lower().strip() or ketchup_agreement.lower().strip() == 'n':
+			request_receipt()
+		else:
+			error_handle('yes no', 'ketchup', ketchup_agreement)
+			ketchup_selection('agreement')
+	elif stage == 'choose':
+		ketchupTable()
+		ketchup_amount = input('How many packets of ketchup? ')
+		pattern = "^[0-9]+$"
+		isInt = bool(re.match(pattern, ketchup_amount))
+		if isInt == True:
+			if int(ketchup_amount) >= 1:
+				addToCart(ketchup_amount, ketchup.type, ketchup.names, ketchup.names, ketchup.sizes, ketchup.prices)
+			else:
+				error_handle('food amount', 'ketchup', ketchup_amount)
+				ketchup_selection('choose')				
+		else:
+			error_handle('food amount', 'ketchup', ketchup_amount)
+			ketchup_selection('choose')
+		request_receipt()
 
-# Ketchup Selection
-#ketchup_ask = input('How many ketchup packets do you want? ')
-#if int(ketchup_ask) > 0:
-#	ketchup_amount = ketchup_ask
-#	print('You got: ' + ketchup_amount + ' packets!')
+#
+# Start Program
+#
+
+sandwich_selection('agreement')
