@@ -1,3 +1,12 @@
+# ░█████╗░░█████╗░███╗░░░███╗██████╗░░█████╗░  ███╗░░░███╗███████╗███╗░░██╗██╗░░░██╗
+# ██╔══██╗██╔══██╗████╗░████║██╔══██╗██╔══██╗  ████╗░████║██╔════╝████╗░██║██║░░░██║
+# ██║░░╚═╝██║░░██║██╔████╔██║██████╦╝██║░░██║  ██╔████╔██║█████╗░░██╔██╗██║██║░░░██║
+# ██║░░██╗██║░░██║██║╚██╔╝██║██╔══██╗██║░░██║  ██║╚██╔╝██║██╔══╝░░██║╚████║██║░░░██║
+# ╚█████╔╝╚█████╔╝██║░╚═╝░██║██████╦╝╚█████╔╝  ██║░╚═╝░██║███████╗██║░╚███║╚██████╔╝
+# ░╚════╝░░╚════╝░╚═╝░░░░░╚═╝╚═════╝░░╚════╝░  ╚═╝░░░░░╚═╝╚══════╝╚═╝░░╚══╝░╚═════╝░
+# ️          ⚠ CANNOT BE RUN ON TRINKET OR OTHERS WITHOUT LIBRARY SUPPORT
+# Made By Nathan Parker (KingPr0o7)
+
 import os
 import time
 import re
@@ -196,7 +205,7 @@ def addToCart(item_quantity, item_type, item_name, items_list, items_sizes, item
 		if len(receipt.rows) >= 2:
 			receipt.del_row(-1)
 			receipt.del_row(-1)     
-		receipt.add_row([item_quantity, str(item_type).upper(), item_name, items_sizes, '$' + "{:.2f}".format(float(item_price))])
+		receipt.add_row([item_quantity, str(item_type).upper(), item_name, items_sizes, f'${"{:.2f}".format(float(item_price))} (${items_prices}ea)'])
 		if 'Sandwich' in cart_item_types:
 			if 'Beverage' in cart_item_types:
 				if 'Side' in cart_item_types:
