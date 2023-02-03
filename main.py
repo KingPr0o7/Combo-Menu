@@ -375,12 +375,13 @@ def fries_selection(stage):
 			fries_selection('upgrade')
 		elif fries_size.lower().strip() == 'm' or 'medium' in fries_size.lower().strip():
 			fries_size_selected = 'medium'
+			fries_selection('amount')
 		elif fries_size.lower().strip() == 'l' or 'large' in fries_size.lower().strip():
 			fries_size_selected = 'large'
+			fries_selection('amount')
 		else:
 			error_handle('food selection', 'fries', fries_size)
 			fries_selection('choose')
-		fries_selection('amount')
 	elif stage == 'upgrade':
 		fries_upgrade = input('Would you like to mega-size your fries? ')
 		if 'yes' in fries_upgrade.lower().strip() or fries_upgrade.lower().strip() == 'y':
