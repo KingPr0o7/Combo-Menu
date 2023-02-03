@@ -28,6 +28,9 @@ cart_item_types = []
 cart_item_prices = []
 cart_total_cost = 0
 
+# REGEX PATTERN
+pattern = "^[0-9]+$"
+
 # Menu Items
 class sandwichs:
 	type = 'Sandwich'
@@ -166,33 +169,33 @@ def addToCart(item_quantity, item_type, item_name, items_list, items_sizes, item
 			if str(item_name).lower().strip() == str(items_sizes[index]).lower().strip():
 				cart_items.append(item)
 				cart_item_types.append(item_type)
-				item_price = items_prices[index]
-				cart_item_prices.append(items_prices[index])
-				cart_total_cost += float(items_prices[index])
+				item_price = float(items_prices[index]) * int(item_quantity)
+				cart_item_prices.append(item_price)
+				cart_total_cost += float(item_price)
 				clear_console(system)
 				if len(receipt.rows) >= 2:
 					receipt.del_row(-1)
 					receipt.del_row(-1)
-				receipt.add_row([item_quantity, str(item_type).upper(), str(items_list), str(items_sizes[index]), '$' + "{:.2f}".format(float(item_price))])
+				receipt.add_row([item_quantity, str(item_type).upper(), str(items_list), str(items_sizes[index]), '$' + "{:.2f}".format(float(item_price)) + f' (${items_prices[index]}ea)'])
 				receipt.add_row(['', '', '', '', ''])
 				receipt.add_row([format_str('BOLD', 'TOTAL'), '', '', '', format_str('BOLD', f'${"{:.2f}".format(cart_total_cost)}')])
-				print(receipt)
+		print(receipt)
 	elif item_type == 'Sandwich':
 		for index, item in enumerate(items_list):
 			if str(item_name).lower().strip() == str(items_list[index]).lower().strip():
 				cart_items.append(item)
 				cart_item_types.append(item_type)
-				item_price = items_prices[index]
-				cart_item_prices.append(items_prices[index])
-				cart_total_cost += float(items_prices[index])
+				item_price = float(items_prices[index]) * int(item_quantity)
+				cart_item_prices.append(item_price)
+				cart_total_cost += float(item_price)
 				clear_console(system)
 				if len(receipt.rows) >= 2:
 					receipt.del_row(-1)
 					receipt.del_row(-1)
-				receipt.add_row([item_quantity, str(item_type).upper(), str(item), str(items_sizes), '$' + "{:.2f}".format(float(item_price))])
+				receipt.add_row([item_quantity, str(item_type).upper(), str(item), str(items_sizes), '$' + "{:.2f}".format(float(item_price)) + f' (${items_prices[index]}ea)'])
 				receipt.add_row(['', '', '', '', ''])
 				receipt.add_row([format_str('BOLD', 'TOTAL'), '', '', '', format_str('BOLD', f'${"{:.2f}".format(cart_total_cost)}')])
-				print(receipt)
+		print(receipt)
 	# Extras
 	else:
 		discount = None
@@ -226,32 +229,50 @@ def request_receipt():
 # Menu Item IDFs
 #
 
-def sandwichTable():
+def sandwichTable(type):
 	options.clear_rows()
-	options.title = format_str('BOLD', 'SANDWICH OPTIONS')
-	for index in range(len(sandwichs.names)):
-		options.add_row([1, format_str('BOLD_UNDERLINE', sandwichs.names[index][0]) + sandwichs.names[index][1:], sandwichs.sizes, '$' + sandwichs.prices[index]])
-	print(options)
-	print(format_str('WARNING_BOLD_UNDERLINE', 'You can type the whole name or just the first letter!'))
+	if type == 'option':
+		options.title = format_str('BOLD', 'SANDWICH OPTIONS')
+		for index in range(len(sandwichs.names)):
+			options.add_row([1, format_str('BOLD_UNDERLINE', sandwichs.names[index][0]) + sandwichs.names[index][1:], sandwichs.sizes, '$' + sandwichs.prices[index]])
+		print(options)
+		print(format_str('WARNING_BOLD_UNDERLINE', 'You can type the whole name or just the first letter!'))
+	elif type == 'amount':
+		options.title = format_str('BOLD', 'SANDWICH SIZES')
+		for index in range(len(sandwichs.names)):
+			options.add_row([format_str('BOLD_UNDERLINE', '>=1 && !== 0'), sandwichs.names[index], sandwichs.sizes, '$' + str(sandwichs.prices[index]) + 'ea'])	
+		print(options)
 
-def beverageTable():
+def beverageTable(type):
 	options.clear_rows()
-	options.title = format_str('BOLD', 'BEVERAGE OPTIONS')
-	for index in range(len(beverages.sizes)):
-		options.add_row([1, beverages.names, format_str('BOLD_UNDERLINE', beverages.sizes[index][0]) + beverages.sizes[index][1:], '$' + beverages.prices[index]])
-	print(options)
+	if type == 'option':
+		options.title = format_str('BOLD', 'BEVERAGE OPTIONS')
+		for index in range(len(beverages.sizes)):
+			options.add_row([1, beverages.names, format_str('BOLD_UNDERLINE', beverages.sizes[index][0]) + beverages.sizes[index][1:], '$' + beverages.prices[index]])
+		print(options)
+	elif type == 'amount':
+		options.title = format_str('BOLD', 'BEVERAGE AMOUNTS')
+		for index in range(len(beverages.sizes)):
+			options.add_row([format_str('BOLD_UNDERLINE', '>=1 && !== 0'), beverages.names, beverages.sizes[index], '$' + str(beverages.prices[index]) + 'ea'])	
+		print(options)		
 
-def friesTable():
+def friesTable(type):
 	options.clear_rows()
-	options.title = format_str('BOLD', 'FRIES OPTIONS')
-	for index in range(len(fries.sizes)):
-		options.add_row([1, fries.names, format_str('BOLD_UNDERLINE', fries.sizes[index][0]) + fries.sizes[index][1:], '$' + fries.prices[index]])
-	print(options)
+	if type == 'option':
+		options.title = format_str('BOLD', 'FRIES OPTIONS')
+		for index in range(len(fries.sizes)):
+			options.add_row([1, fries.names, format_str('BOLD_UNDERLINE', fries.sizes[index][0]) + fries.sizes[index][1:], '$' + fries.prices[index]])
+		print(options)
+	elif type == 'amount':
+		options.title = format_str('BOLD', 'FRIES AMOUNTS')
+		for index in range(len(fries.sizes)):
+			options.add_row([format_str('BOLD_UNDERLINE', '>=1 && !== 0'), fries.names, fries.sizes[index], '$' + str(fries.prices[index]) + 'ea'])	
+		print(options)	
 
 def ketchupTable():
 	options.clear_rows()
-	options.title = format_str('BOLD', 'KETCHUP OPTIONS')
-	options.add_row([format_str('BOLD_UNDERLINE', '>=1 && !== 0'), fries.names, ketchup.sizes, '$' + str(ketchup.prices) + 'ea'])
+	options.title = format_str('BOLD', 'KETCHUP AMOUNTS')
+	options.add_row([format_str('BOLD_UNDERLINE', '>=1 && !== 0'), ketchup.names, ketchup.sizes, '$' + str(ketchup.prices) + 'ea'])
 	print(options)
 
 #
@@ -259,6 +280,7 @@ def ketchupTable():
 #
 
 def sandwich_selection(stage):
+	global sandwich_selected
 	if stage == 'agreement':
 		sandwich_agreement = input(f'Would you like a sandwich? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
 		if 'yes' in sandwich_agreement.lower().strip() or sandwich_agreement.lower().strip() == 'y':
@@ -269,7 +291,7 @@ def sandwich_selection(stage):
 			error_handle('yes no', 'sandwich', sandwich_agreement)
 			sandwich_selection('agreement')
 	elif stage == 'choose':
-		sandwichTable()
+		sandwichTable('option')
 		sandwich_selected = input('What type of sandwich would you like? ')
 		if sandwich_selected.lower().strip() == 'c' or 'chicken' in sandwich_selected.lower().strip():
 			sandwich_selected = 'chicken'
@@ -280,8 +302,21 @@ def sandwich_selection(stage):
 		else:
 			error_handle('food selection', 'sandwich', sandwich_selected)
 			sandwich_selection('choose')
-		addToCart(1, sandwichs.type, sandwich_selected, sandwichs.names, sandwichs.sizes, sandwichs.prices)
-		beverage_selection('agreement')
+		sandwich_selection('amount')
+	elif stage == 'amount':
+		sandwichTable('amount')
+		sandwich_amount = input('How many sandwichs? ')
+		isInt = bool(re.match(pattern, sandwich_amount))
+		if isInt == True:
+			if int(sandwich_amount) >= 1:
+				addToCart(sandwich_amount, sandwichs.type, sandwich_selected, sandwichs.names, sandwichs.sizes, sandwichs.prices)
+				beverage_selection('agreement')
+			else:
+				error_handle('food amount', 'sandwich', sandwich_amount)
+				sandwich_selection('amount')				
+		else:
+			error_handle('food amount', 'sandwich', sandwich_amount)
+			sandwich_selection('amount')
 
 def beverage_selection(stage):
 	global beverage_size_selected
@@ -295,7 +330,7 @@ def beverage_selection(stage):
 			error_handle('yes no', 'beverage', beverage_agreement)
 			beverage_selection('agreement')
 	elif stage == 'choose':
-		beverageTable()
+		beverageTable('option')
 		beverage_size = input('What size of beverage? ')
 		if beverage_size.lower().strip() == 's' or 'small' in beverage_size.lower().strip():
 			beverage_size_selected = 'small'
@@ -306,11 +341,24 @@ def beverage_selection(stage):
 		else:
 			error_handle('food selection', 'beverage', beverage_size)
 			beverage_selection('choose')
-		addToCart(1, beverages.type, beverage_size_selected, beverages.names, beverages.sizes, beverages.prices)
-		fries_selection('agreement')
+		beverage_selection('amount')
+	elif stage == 'amount':
+		beverageTable('amount')
+		beverage_amount = input('How many beverages? ')
+		isInt = bool(re.match(pattern, beverage_amount))
+		if isInt == True:
+			if int(beverage_amount) >= 1:
+				addToCart(beverage_amount, beverages.type, beverage_size_selected, beverages.names, beverages.sizes, beverages.prices)
+				fries_selection('agreement')
+			else:
+				error_handle('food amount', 'beverage', beverage_amount)
+				beverage_selection('amount')				
+		else:
+			error_handle('food amount', 'beverage', beverage_amount)
+			beverage_selection('amount')
 
 def fries_selection(stage):
-	fries_size_selected = None
+	global fries_size_selected
 	if stage == 'agreement':
 		fries_agreement = input(f'Would you like some fries? ({format_str("BOLD_UNDERLINE", "Y")}es | {format_str("BOLD_UNDERLINE", "N")}o) ')
 		if 'yes' in fries_agreement.lower().strip() or fries_agreement.lower().strip() == 'y':
@@ -320,8 +368,8 @@ def fries_selection(stage):
 		else:
 			error_handle('yes no', 'fries', fries_agreement)
 			fries_selection('agreement')
-	if stage == 'choose':
-		friesTable()
+	elif stage == 'choose':
+		friesTable('option')
 		fries_size = input('What size of fries? ')
 		if fries_size.lower().strip() == 's' or 'small' in fries_size.lower().strip():
 			fries_selection('upgrade')
@@ -332,10 +380,8 @@ def fries_selection(stage):
 		else:
 			error_handle('food selection', 'fries', fries_size)
 			fries_selection('choose')
-		if fries_size_selected is not None:
-			addToCart(1, fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
-			ketchup_selection('agreement')
-	if stage == 'upgrade':
+		fries_selection('amount')
+	elif stage == 'upgrade':
 		fries_upgrade = input('Would you like to mega-size your fries? ')
 		if 'yes' in fries_upgrade.lower().strip() or fries_upgrade.lower().strip() == 'y':
 			fries_size_selected = 'large'
@@ -344,7 +390,21 @@ def fries_selection(stage):
 		else:
 			error_handle('yes no', 'fries', fries_upgrade)
 			fries_selection('upgrade')
-		addToCart(1, fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
+		fries_selection('amount')
+	elif stage == 'amount':
+		friesTable('amount')
+		fries_amount = input('How many fries? ')
+		isInt = bool(re.match(pattern, fries_amount))
+		if isInt == True:
+			if int(fries_amount) >= 1:
+				addToCart(fries_amount, fries.type, fries_size_selected, fries.names, fries.sizes, fries.prices)
+				ketchup_selection('agreement')
+			else:
+				error_handle('food amount', 'fries', fries_amount)
+				fries_selection('amount')				
+		else:
+			error_handle('food amount', 'fries', fries_amount)
+			fries_selection('amount')
 
 def ketchup_selection(stage):
 	if stage == 'agreement':
@@ -359,7 +419,6 @@ def ketchup_selection(stage):
 	elif stage == 'choose':
 		ketchupTable()
 		ketchup_amount = input('How many packets of ketchup? ')
-		pattern = "^[0-9]+$"
 		isInt = bool(re.match(pattern, ketchup_amount))
 		if isInt == True:
 			if int(ketchup_amount) >= 1:
