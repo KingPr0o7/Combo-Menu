@@ -1,3 +1,4 @@
-from window import Window
+import js
 
-Window()
+x = 42
+js.put_object(x)
