@@ -1,4 +1,3 @@
 import js
 
-x = 42
-js.put_object(x)
+js.input('What type of sandwich would you like?')
