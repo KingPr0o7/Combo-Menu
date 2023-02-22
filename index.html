@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Combo Menu</title>
 
-	<!-- ****** faviconit.com favicons ****** -->
+	<!-- Favicons (Thanks to!: https://faviconit.com)-->
 	<link rel="shortcut icon" href="/images/favicons/favicon.ico">
 	<link rel="icon" sizes="16x16 32x32 64x64" href="/images/favicons/favicon.ico">
 	<link rel="icon" type="image/png" sizes="196x196" href="/images/favicons/-192.png">
@@ -24,7 +24,6 @@
 	<link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/-76.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/-152.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/-180.png">
-	<!-- ****** faviconit.com favicons ****** -->
 
 	<link rel="stylesheet" href="index.css">
 	<script defer src="index.js"></script>
@@ -42,10 +41,18 @@
 			<div id="chat-content">
 				<div id="bot-chat">
 					<img id="bot-pfp" src="/images/icons/computer.svg">
-					<span id="bot-msg">Waiting...<span id="cursor" blinking></span></span>
+					<div id="bot-msg">
+						<span>Waiting...<span id="cursor" blinking></span></span>
+						<div id="sandwich-options">
+							<div id="sandwich-chicken">
+								<img src="/images/icons/bag.svg" id="sandwich-image">
+								<p>Chicken Sandwich</p>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div id="human-chat">
-					<span id="human-msg">Chicken</span>
+				<div class="starter-human-chat" id="human-chat">
+					<span id="human-msg">PLACEHOLDER</span>
 					<img id="human-pfp" src="/images/icons/user.svg">
 				</div>
 			</div>

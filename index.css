@@ -69,12 +69,12 @@ html, body {
 	padding: 10px;
 	display: flex;
 	align-items: center;
-	justify-content: flex-start;
 	width: 40%;
 }
 
-#human-chat {
-	justify-content: flex-end;
+
+.starter-human-chat {
+	visibility: hidden;
 }
 
 #bot-pfp, #human-pfp {
@@ -83,10 +83,16 @@ html, body {
 }
 
 #bot-msg, #human-msg {
+	display: flex;
+	flex-direction: column-reverse;
 	color: white;
+	width: 100%;
 	padding: 10px;
 }
 
+#human-msg {
+	flex-direction: row-reverse;
+}
 
 #forum-content {
 	display: flex;
@@ -145,4 +151,19 @@ html, body {
 @keyframes blinking {
 	0% {opacity: 100%;}
 	100% {opacity: 20%;}
+}
+
+#sandwich-chicken {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	background-color: #3c3f42;
+	justify-content: center;
+	padding: 5px;
+	border-radius: 7px;
+}
+
+#sandwich-image {
+	width: 32px;
+	height: 32px;
 }
