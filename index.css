@@ -92,7 +92,8 @@ html, body {
 }
 
 .human-msg {
-	flex-direction: row-reverse;
+	display: flex;
+	justify-content: flex-end;
 }
 
 #starter-human-chat {
@@ -160,7 +161,7 @@ html, body {
 /*                           */
 
 @media screen and (max-width: 730px) {
-	#bot-chat, #human-chat {
+	.bot-chat, .human-chat {
 		width: 80%;
 	}
 }
