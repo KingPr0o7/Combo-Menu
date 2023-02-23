@@ -86,7 +86,6 @@ html, body {
 }
 
 .bot-msg, .human-msg {
-	display: flex;
 	color: white;
 	width: 100%;
 	padding: 10px;
@@ -109,6 +108,7 @@ html, body {
 	position: relative;
 	background-color: #FFF;
 	height: 18px;
+	top: 1px;
 	width: 2px;
 }
 
