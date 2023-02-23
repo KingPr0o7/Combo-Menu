@@ -1,3 +1,6 @@
+/*                     */
+/* All Across the Page */
+/*                     */
 @import url('https://fonts.googleapis.com/css2?family=Cousine&display=swap');
 
 * {
@@ -14,7 +17,11 @@ html, body {
 	background: radial-gradient(circle, rgba(54,106,246,1) 0%, rgba(31,31,31,1) 100%);
 }
 
-#program-information {
+/*          */
+/* Titlebar */
+/*          */
+
+#titlebar {
 	width: 100%;
 	height: 100px;
 	background: rgba(41, 41, 41, 0.6);
@@ -24,22 +31,23 @@ html, body {
 	justify-content: center;
 }
 
-#program-logo {
+#titlebar-logo {
 	padding: 10px;
 	width: 100px;
 	height: 100px;
 }
 
-#program-name {
+#titlebar-name {
 	font-size: 1.5rem;
-}
-
-#program-name {
 	color: white;
 	padding: 25px;
 }
 
-#chat-layout {
+/*      */
+/* Chat */
+/*      */
+
+#content {
 	display: flex;
 	align-items: center;
 	flex-direction: column;
@@ -47,7 +55,7 @@ html, body {
 	height: calc(100% - 100px);
 }
 
-#chat-container {
+#chat {
 	width: 100%;
 	display: flex;
 	align-items: center;
@@ -56,7 +64,7 @@ html, body {
 	overflow-y: auto;
 }
 
-#chat-content {
+#chat-wrapper {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -65,36 +73,54 @@ html, body {
 	width: 100%;
 }
 
-#bot-chat, #human-chat {
+.bot-chat, .human-chat {
 	padding: 10px;
 	display: flex;
 	align-items: center;
 	width: 40%;
 }
 
-
-.starter-human-chat {
-	visibility: hidden;
-}
-
-#bot-pfp, #human-pfp {
+.bot-pfp, .human-pfp {
 	width: 48px;
 	height: 48px;
 }
 
-#bot-msg, #human-msg {
+.bot-msg, .human-msg {
 	display: flex;
-	flex-direction: column-reverse;
 	color: white;
 	width: 100%;
 	padding: 10px;
 }
 
-#human-msg {
+.human-msg {
 	flex-direction: row-reverse;
 }
 
-#forum-content {
+#starter-human-chat {
+	visibility: hidden;
+}
+
+/*              */
+/* Typing Caret */
+/*              */
+
+#cursor {
+	display: inline-block;
+	position: relative;
+	background-color: #FFF;
+	height: 18px;
+	width: 2px;
+}
+
+#cursor[blinking] {
+	animation: blinking 850ms infinite;
+}
+
+/*      */
+/* Form */
+/*      */
+
+#chat-form {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -102,7 +128,7 @@ html, body {
 	gap: 10px;
 }
 
-#submit-input {
+#form-input {
 	padding: 10px;
 	border-radius: 5px;
 	background-color: #3c3f42;
@@ -111,7 +137,7 @@ html, body {
 	border: none;
 }
 
-#submit {
+#form-submit {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -124,10 +150,14 @@ html, body {
 	background-color: #3c3f42;
 }
 
-#submit-btn-icon {
+#form-submit-image {
 	width: 20px;
 	height: 20px;
 }
+
+/*                           */
+/* Dynamic Content Awareness */
+/*                           */
 
 @media screen and (max-width: 730px) {
 	#bot-chat, #human-chat {
@@ -135,35 +165,7 @@ html, body {
 	}
 }
 
-#cursor {
-	display: inline-block;
-	position: relative;
-	top: 5px;
-	background-color: #FFF;
-	height: 18px;
-	width: 2px;
-}
-
-#cursor[blinking] {
-	animation: blinking 850ms infinite;
-}
-
 @keyframes blinking {
 	0% {opacity: 100%;}
 	100% {opacity: 20%;}
-}
-
-#sandwich-chicken {
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	background-color: #3c3f42;
-	justify-content: center;
-	padding: 5px;
-	border-radius: 7px;
-}
-
-#sandwich-image {
-	width: 32px;
-	height: 32px;
 }

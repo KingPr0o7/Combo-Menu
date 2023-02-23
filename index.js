@@ -1,5 +1,5 @@
 // Settings 
-const typing_speed = 50;
+const typing_speed = 30; // Milliseconds
 
 // Immutables
 const sandwich_typecases = ['chicken', 'beef', 'tofu', 'c', 'b', 't'];
@@ -8,39 +8,41 @@ var bot_typing_status = false;
 var chat_count = 1;
 
 // Elements
+const chat = document.getElementById('chat');
+const chat_wrapper = document.getElementById('chat-wrapper');
+
 const cursor = document.getElementById("cursor");
-const form = document.getElementById('forum-content');
-const old_element = document.getElementById('human-chat');
-const submit_forum = document.getElementById('submit-input');
-const submit_button = document.getElementById('submit');
-const container_holder = document.getElementById('chat-container');
-const container = document.getElementById('chat-content');
-const sandwich_options = document.getElementById('sandwich-options');
-old_element.remove();
+
+const bot_chat = document.querySelector('.bot-msg');
+const human_chat = document.querySelector('.human-chat');
+human_chat.remove();
+
+const form = document.getElementById('chat-form');
+const form_input = document.getElementById('form-input');
+const submit_button = document.getElementById('form-submit');
 
 // Functions
 function input(msg) {
-	let bot_msg = document.getElementById('bot-msg');
+	let bot_msg = document.querySelector('.bot-msg');
 	bot_msg.textContent = '';
 	bot_msg.appendChild(cursor);
-	document.getElementById('bot-msg').appendChild(sandwich_options);
-	type("bot-msg", msg, typing_speed, 0, true);
+	type(".bot-msg", msg, typing_speed, 0, true);
 }
 
 function add_chat(msg) {
 	chat_count++;
-	var clone = old_element.cloneNode(true);
+	let clone = human_chat.cloneNode(true);
 	clone.children[0].innerHTML = msg;
-	clone.classList.remove('starter-human-chat');
-	container.appendChild(clone);
-	container_holder.scrollBy(0, 2000);
+	clone.id = '';
+	chat_wrapper.appendChild(clone);
+	chat.scrollBy(0, 2000);
 	if (chat_count % 2 == 0) {
-		document.getElementById('bot-msg').removeChild(cursor);
+		bot_chat.removeChild(cursor);
 	}
 }
 
 function type(targetElement, textToType, speed, index, cursorMode) {
-	let element = document.getElementById(`${targetElement}`);
+	let element = document.querySelector(`${targetElement}`);
 	let text = `${textToType}`;
 	if (index < text.length) {
 		cursor.removeAttribute('blinking', '');
@@ -63,11 +65,11 @@ function type(targetElement, textToType, speed, index, cursorMode) {
 
 function input_border(toggle) {
 	if (toggle == true) {
-		submit_forum.style.boxShadow = 'inset 0 0 0 2px red';
-		submit_forum.style.color = 'red';
+		form_input.style.boxShadow = 'inset 0 0 0 2px red';
+		form_input.style.color = 'red';
 	} else {
-		submit_forum.style.boxShadow = 'none';
-		submit_forum.style.color = 'white';
+		form_input.style.boxShadow = 'none';
+		form_input.style.color = 'white';
 	}
 }
 
@@ -76,22 +78,22 @@ function input_border(toggle) {
 form.addEventListener('submit', function(event) {
 	event.preventDefault();
 	if (bot_typing_status == false) {
-		if (!sandwich_typecases.includes(submit_forum.value.toLowerCase())) {
+		if (!sandwich_typecases.includes(form_input.value.toLowerCase())) {
 			input_border(true);
 		} else {
 			input_border(false);
-			add_chat(submit_forum.value);
-			submit_forum.value = '';
+			add_chat(form_input.value);
+			form_input.value = '';
 		}
 	}
 });
 
 
-submit_forum.addEventListener('input', function() {
-	if (sandwich_typecases.includes(submit_forum.value.toLowerCase())) {
+form_input.addEventListener('input', function() {
+	if (sandwich_typecases.includes(form_input.value.toLowerCase())) {
 		input_border(false);
 	}
-	if (submit_forum.value == '') {
+	if (form_input.value == '') {
 		input_border(false);
 	}
 });
