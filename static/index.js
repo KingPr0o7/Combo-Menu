@@ -6,7 +6,8 @@ const sandwich_typecases = ['chicken', 'beef', 'tofu', 'c', 'b', 't'];
 const size_typecases = ['small', 'medium', 'large', 's', 'm', 'l'];
 var bot_typing_status = false;
 var chat_count = 1;
-var message = "{{ message }}"
+var current_message = '';
+var flask_output = "{{ python_output }}";
 
 // Elements
 const chat = document.getElementById('chat');
@@ -39,6 +40,8 @@ function add_chat(msg) {
 	if (chat_count == 2) {
 		bot_chat.removeChild(cursor);
 	}
+	current_message = msg;
+	sendVariable(current_message)
 }
 
 function type(targetElement, textToType, speed, index, cursorMode) {
@@ -103,14 +106,14 @@ input(document.querySelector('.flask-output').textContent)
 // JavaScript to Flask
 
 function sendVariable() {
-    var myVariable = 'LOL';
+    var javascript_output = current_message;
     fetch('/my-route', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            myVariable: myVariable
+            javascript_output: javascript_output
         })
     })
 	// Data Check
@@ -119,5 +122,3 @@ function sendVariable() {
         console.log(data.result);
     });
 }
-
-sendVariable()
