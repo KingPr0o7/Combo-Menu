@@ -170,3 +170,7 @@ html, body {
 	0% {opacity: 100%;}
 	100% {opacity: 20%;}
 }
+
+.flask-output {
+	display: none;
+}

@@ -6,11 +6,11 @@ const sandwich_typecases = ['chicken', 'beef', 'tofu', 'c', 'b', 't'];
 const size_typecases = ['small', 'medium', 'large', 's', 'm', 'l'];
 var bot_typing_status = false;
 var chat_count = 1;
+var message = "{{ message }}"
 
 // Elements
 const chat = document.getElementById('chat');
 const chat_wrapper = document.getElementById('chat-wrapper');
-
 const cursor = document.getElementById("cursor");
 
 const bot_chat = document.querySelector('.bot-msg');
@@ -36,7 +36,7 @@ function add_chat(msg) {
 	clone.id = '';
 	chat_wrapper.appendChild(clone);
 	chat.scrollBy(0, 2000);
-	if (chat_count % 2 == 0) {
+	if (chat_count == 2) {
 		bot_chat.removeChild(cursor);
 	}
 }
@@ -97,3 +97,27 @@ form_input.addEventListener('input', function() {
 		input_border(false);
 	}
 });
+
+input(document.querySelector('.flask-output').textContent)
+
+// JavaScript to Flask
+
+function sendVariable() {
+    var myVariable = 'LOL';
+    fetch('/my-route', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            myVariable: myVariable
+        })
+    })
+	// Data Check
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.result);
+    });
+}
+
+sendVariable()
