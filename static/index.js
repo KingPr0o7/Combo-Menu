@@ -6,6 +6,7 @@ const sandwich_typecases = ['chicken', 'beef', 'tofu', 'c', 'b', 't'];
 const sandwich_prices = [5.25, 6.25, 5.75] // Chicken, Beef, and Tofu
 const drink_prices = [1.00, 1.75, 2.25] // Small, Medium, and Large
 const fries_prices = [1.00, 1.50, 2.00] // Small, Medium, and Large
+const ketchup_price = 0.25
 const size_typecases = ['small', 'medium', 'large', 's', 'm', 'l'];
 const agreement_typecases = ['y', 'yes', 'n', 'no'];
 var bot_typing_status = false;
@@ -59,7 +60,7 @@ function updateVariables() {
 	flask_cart_types = document.getElementById('flask-cart-types').textContent;
 	flask_cart_names = document.getElementById('flask-cart-names').textContent;
 	flask_cart_total = document.getElementById('flask-cart-total').textContent;
-	flask_item_quantity = document.getElementById('flask-item-quantity').textContent;	
+	flask_item_quantity = document.getElementById('flask-item-quantity').textContent;
 }
 
 // Flask to JavaScript
@@ -83,7 +84,6 @@ function fetchVariables() {
 		document.getElementById('flask-cart-names').textContent = data.flask_cart_names;
 		document.getElementById('flask-cart-total').textContent =  data.flask_cart_total;
 		document.getElementById('flask-item-quantity').textContent = data.flask_item_quantity;
-
 		updateVariables()
 
 		send_bot_message(data.flask_output);
@@ -139,12 +139,12 @@ function send_bot_message(msg) {
 	current_bot_message = msg;
 	flask_output_type = document.getElementById('flask-output-type').textContent;
 	// Typecase reminder
-	if (flask_output_type == 'Sandwich Agreement' || flask_output_type == 'Drink Agreement' || flask_output_type == 'Fries Agreement' || flask_output_type == 'Fries Upgrade') {
+	if (flask_output_type == 'Sandwich Agreement' || flask_output_type == 'Drink Agreement' || flask_output_type == 'Fries Agreement' || flask_output_type == 'Fries Upgrade' || flask_output_type == 'Ketchup Agreement') {
 		form_parameters.textContent = '(Y)es (N)o';
 	}
 	if (flask_output_type == 'Sandwich Selection') {
 		form_parameters.textContent = '(C)hicken, (B)eef, or (T)ofu'
-	} else if (flask_output_type == 'Sandwich Amount' || flask_output_type == 'Drink Amount' || flask_output_type == 'Fries Amount') {
+	} else if (flask_output_type == 'Sandwich Amount' || flask_output_type == 'Drink Amount' || flask_output_type == 'Fries Amount' || flask_output_type == 'Ketchup Amount') {
 		form_parameters.textContent = '>=1 AND !==0'
 	} else if (flask_output_type == 'Drink Size Selection' || flask_output_type == 'Fries Size Selection') {
 		form_parameters.textContent = '(S)mall, (M)edium, or (L)arge'
@@ -166,6 +166,10 @@ function send_user_message(msg) {
 			flask_output_type = 'Sandwich Cart Addition';
 		} else if (flask_output_type == 'Drink Agreement') {
 			flask_output_type = 'Drink Cart Addition';
+		} else if (flask_output_type == 'Fries Agreement') {
+			flask_output_type = 'Fries Cart Addition';
+		} else if (flask_output_type == 'Ketchup Agreement') {
+			flask_output_type = 'Done!';
 		}
 	}
 	handshake()
@@ -188,11 +192,12 @@ function type(targetElement, textToType, speed, index) {
 		// When message is done being typed and other things can be added
 		cursor.setAttribute('blinking', '');
 		bot_typing_status = false;
-		if (flask_output_type == 'Sandwich Selection' || flask_output_type == 'Drink Size Selection' || flask_output_type == 'Fries Size Selection') {
+		if (flask_output_type == 'Sandwich Selection' || flask_output_type == 'Drink Size Selection' || flask_output_type == 'Fries Size Selection' || flask_output_type == 'Ketchup Amount') {
 			post_item_options();
-		}
-		if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition' || flask_output_type == 'Fries Cart Addition' || flask_output_type == 'Show Cart') {
+		} else if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition' || flask_output_type == 'Fries Cart Addition' || flask_output_type == 'Ketchup Cart Addition') {
 			show_cart();
+		} else if (flask_output_type == 'Done!') {
+			document.querySelector('.bot-msg-wrapper[active]').append(cart);
 		}
 		element.removeAttribute('active');
 		document.querySelector('.bot-msg-wrapper[active]').removeAttribute('active');
@@ -206,6 +211,7 @@ function type(targetElement, textToType, speed, index) {
 // Adds items to the options list on a bot chat, letting the user know what can be ordered
 function add_item_option(cloneTo, item_id, item_title, item_size, item_type, item_name) {
 	let new_item = food_options.cloneNode(true);
+	new_item.id = '';
 	new_item.querySelector('.item-option-title').textContent = item_title;
 	if (item_type == 'Sandwich') {
 		new_item.querySelector('.item-price').textContent = `$${sandwich_prices[item_id]}`;
@@ -215,6 +221,9 @@ function add_item_option(cloneTo, item_id, item_title, item_size, item_type, ite
 	} else if (item_type == 'Side') {
 		new_item.querySelector('.item-price').textContent = `$${fries_prices[item_id].toFixed(2)}`;
 		new_item.querySelector('.item-option-image').src = '/static/images/icons/fries.svg'		
+	} else if (item_type == 'Extra') {
+		new_item.querySelector('.item-price').textContent = `$${ketchup_price.toFixed(2)}`;
+		new_item.querySelector('.item-option-image').src = '/static/images/icons/ketchup.svg'		
 	}
 	new_item.querySelector('.item-size').textContent = item_size;
 	new_item.querySelector('.item-type').textContent = item_type;
@@ -237,6 +246,8 @@ function post_item_options() {
 		add_item_option(new_item_options, 0, 'French Fries', 'Small', 'Side', 'Fries');
 		add_item_option(new_item_options, 1, 'French Fries', 'Medium', 'Side', 'Fries');
 		add_item_option(new_item_options, 2, 'French Fries', 'Large', 'Side', 'Fries');		
+	} else if (current_bot_message == 'How many ketchup packets would you like?') {
+		add_item_option(new_item_options, 0, 'Ketchup Packet', 'Regular', 'Extra', 'Ketchup');	
 	}
 	document.querySelector('.bot-msg-wrapper[active]').append(new_item_options);
 	document.querySelector('.bot-chat[active]').style.alignItems = 'flex-start';
@@ -267,11 +278,14 @@ function show_cart() {
 				new_item_wrapper.querySelector('.cart-item-image').src = '/static/images/icons/drink.svg';
 			} else if (types[i] == 'Fries') {
 				new_item_wrapper.querySelector('.cart-item-image').src = '/static/images/icons/fries.svg';
+			} else if (types[i] == 'Packet') {
+				new_item_wrapper.querySelector('.cart-item-image').src = '/static/images/icons/ketchup.svg';
 			}
 			items_wrapper.append(new_item_wrapper);
 		}
 		new_cart.insertBefore(items_wrapper, new_cart.children[1]);
 	} else {
+		console.log(names, sizes, types, prices);
 		item_wrapper.querySelector('.cart-item-name').textContent = `${names.charAt(0).toUpperCase() + names.slice(1)} ${types}`;
 		item_wrapper.querySelector('.cart-item-attr').textContent = `Size: ${sizes}`;
 		item_wrapper.querySelector('.cart-item-price').textContent = `$${parseFloat(prices).toFixed(2)}`;
@@ -279,20 +293,22 @@ function show_cart() {
 			item_wrapper.querySelector('.cart-item-image').src = '/static/images/icons/drink.svg';
 		} else if (types == 'Fries') {
 			item_wrapper.querySelector('.cart-item-image').src = '/static/images/icons/fries.svg';
+		} else if (types == 'Packet') {
+			item_wrapper.querySelector('.cart-item-image').src = '/static/images/icons/ketchup.svg';
 		}
 		items_wrapper.appendChild(item_wrapper);
 		new_cart.insertBefore(items_wrapper, new_cart.children[1]);
+		console.log(items_wrapper)
 	}
 	if (new_cart.querySelector('.cart-discount')) {
 		new_cart.querySelector('.cart-discount').remove();
 	}
 	total = parseFloat(total) + parseFloat(item_total);
-	total = total.toFixed(2);
-	new_cart.querySelector('.cart-total').textContent = `Total: $${total}`;
+	new_cart.querySelector('.cart-total').textContent = `Total: $${total.toFixed(2)}`;
 	document.querySelector('.bot-msg-wrapper[active]').append(new_cart);
 	document.querySelector('.bot-chat[active]').style.alignItems = 'flex-start';
 	cart = new_cart;
-	if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition') {
+	if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition' || flask_output_type == 'Fries Cart Addition' || flask_output_type == 'Ketchup Cart Addition') {
 		handshake()
 	}
 }
@@ -318,7 +334,7 @@ function input_border(toggle) {
 form.addEventListener('submit', function(event) {
 	event.preventDefault();
 	if (bot_typing_status == false) {
-		if (flask_output_type == 'Sandwich Agreement' || flask_output_type == 'Drink Agreement' || flask_output_type == 'Fries Agreement' || flask_output_type == 'Fries Upgrade') {
+		if (flask_output_type == 'Sandwich Agreement' || flask_output_type == 'Drink Agreement' || flask_output_type == 'Fries Agreement' || flask_output_type == 'Fries Upgrade' || flask_output_type == 'Ketchup Agreement') {
 			if (!agreement_typecases.includes(form_input.value.toLowerCase().trim())) {
 				input_border(true);
 			} else {
@@ -334,7 +350,7 @@ form.addEventListener('submit', function(event) {
 				send_user_message(form_input.value);
 				form_input.value = '';
 			}
-		} else if (flask_output_type == 'Sandwich Amount' || flask_output_type == 'Drink Amount' || flask_output_type == 'Fries Amount') {
+		} else if (flask_output_type == 'Sandwich Amount' || flask_output_type == 'Drink Amount' || flask_output_type == 'Fries Amount' || flask_output_type == 'Ketchup Amount') {
 			if (parseInt(form_input.value) !== 0 && parseInt(form_input.value) > 0) {
 				input_border(false);
 				send_user_message(form_input.value);

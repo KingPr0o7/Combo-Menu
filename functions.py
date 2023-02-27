@@ -1,5 +1,6 @@
 # Global variables
 current_sandwich = ''
+item_types = []
 
 # Checks JS outputs from server.py and returns outputs for JS.
 class Output_Check():
@@ -102,7 +103,28 @@ class Output_Check():
 			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity = cart.add(current_fries_size, 'Fries', 'French', self.js_output)	
 			self.python_output = quantity_fixer(self.item_quantity, 'french', 'fries')
 			self.python_output_type = 'Fries Cart Addition'
-			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity					
+			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity	
+		elif self.js_output_type == 'Fries Cart Addition':
+			self.python_output = 'Would you like some ketchup packets?'	
+			self.python_output_type = 'Ketchup Agreement'	
+			return self.python_output, self.python_output_type  		
+		elif self.js_output_type == 'Ketchup Agreement':
+			self.python_output = 'How many ketchup packets would you like?'
+			self.python_output_type = 'Ketchup Amount'
+			return self.python_output, self.python_output_type    				
+		elif self.js_output_type == 'Ketchup Amount':
+			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity = cart.add('Regular', 'Packet', 'Ketchup', self.js_output)	
+			self.python_output = quantity_fixer(self.item_quantity, 'ketchup', 'packet')
+			self.python_output_type = 'Ketchup Cart Addition'
+			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity			
+		elif self.js_output_type == 'Ketchup Cart Addition':
+			self.python_output = 'Your order is below! Thank you for shopping with us!'
+			self.python_output_type = 'Done!'
+			return self.python_output, self.python_output_type    		
+		elif self.js_output_type == 'Done!':
+			self.python_output = 'Your order is below! Thank you for shopping with us!'
+			self.python_output_type = 'Done!'
+			return self.python_output, self.python_output_type    			
 
 def quantity_fixer(quantity, item, type):
 	if int(quantity) <=1:
@@ -112,6 +134,8 @@ def quantity_fixer(quantity, item, type):
 			return f'Okay! Added a {item} {type} to the cart!'
 		elif type == 'fries':
 			return f'Okay! Added {item} {type} to the cart!'
+		elif type == 'packet':
+			return f'Okay! Added a {item} {type} to the cart!'
 	else:
 		if type == 'sandwich':
 			return f'Okay! Added {quantity} {item} {type}es to the cart!'
@@ -119,6 +143,8 @@ def quantity_fixer(quantity, item, type):
 			return f'Okay! Added {quantity} {item} {type}s to the cart!'
 		elif type == 'fries':
 			return f'Okay! Added {quantity} {item} {type} to the cart!'
+		elif type == 'packet':
+			return f'Okay! Added {quantity} {item} {type}s to the cart!'
 
 # Stores and sends variables for the cart.
 class Cart():
@@ -136,6 +162,7 @@ class Cart():
 
 	def add(self, item_size, item_type, item_name, item_quantity):
 		global current_sandwich
+		global item_types
 
 		self.item_size = item_size
 		self.item_type = item_type
@@ -167,6 +194,8 @@ class Cart():
 				self.item_id = 2			
 			self.item_price = self.fries_prices[self.item_id]	
 			print(self.item_price)
+		if self.item_name == 'Ketchup':
+			self.item_price = self.ketchup_price
 		if int(self.item_quantity) >= 2:
 			for i in range(int(self.item_quantity)):
 				self.cart_sizes.append(self.item_size)
@@ -178,6 +207,7 @@ class Cart():
 			self.cart_types.append(self.item_type)
 			self.cart_names.append(self.item_name)
 			self.cart_prices.append(self.item_price)
+		item_types.append(self.cart_types[0])
 		self.cart_total = sum(self.cart_prices)
 		self.cart_total = '{:.2f}'.format(self.cart_total)
 		return self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity
