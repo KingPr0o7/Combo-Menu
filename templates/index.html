@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Combo Menu</title>
 
-	<!-- ****** faviconit.com favicons ****** -->
+	<!-- ****** Thanks to: http://faviconit.com/en ****** -->
 	<link rel="shortcut icon" href="static/images/favicons/favicon.ico">
 	<link rel="icon" sizes="16x16 32x32 64x64" href="static/images/favicons/favicon.ico">
 	<link rel="icon" type="image/png" sizes="196x196" href="static/images/favicons/-192.png">
@@ -24,13 +24,12 @@
 	<link rel="apple-touch-icon" sizes="76x76" href="static/images/favicons/-76.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="static/images/favicons/-152.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="static/images/favicons/-180.png">
-	<!-- ****** faviconit.com favicons ****** -->
 
 	<link rel="stylesheet" href="/static/index.css">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script defer src="/static/index.js"></script>
 </head>
 <body>
+	<!-- Flask outputs to JavaScript -->
 	<p class="flask-output" id="flask-output">{{ flask_output }}</p>
 	<p class="flask-output" id="flask-output-type">{{ flask_output_type }}</p>
 	<p class="flask-output" id="flask-cart-prices">{{ flask_cart_prices }}</p>
@@ -38,6 +37,8 @@
 	<p class="flask-output" id="flask-cart-sizes">{{ flask_cart_sizes }}</p>
 	<p class="flask-output" id="flask-cart-types">{{ flask_cart_types }}</p>
 	<p class="flask-output" id="flask-cart-names">{{ flask_cart_names }}</p>
+	<p class="flask-output" id="flask-item-quantity">{{ flask_item_quantity }}</p>
+
 	<div id="titlebar">
 		<img id="titlebar-logo" src="static/images/icons/logo.png">
 		<span id="titlebar-name">Combo Menu Interface</span>
@@ -45,6 +46,7 @@
 	<div id="content">
 		<div id="chat">
 			<div id="chat-wrapper">
+				<!-- Individual chats -->
 				<div class="bot-chat" active>
 					<img class="bot-pfp" src="static/images/icons/computer.svg">
 					<div class="bot-msg-wrapper" active>
@@ -77,10 +79,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="human-chat" id="starter">
+				<div class="human-chat">
 					<span class="human-msg">PLACEHOLDER</span>
 					<img class="human-pfp" src="static/images/icons/user.svg">
 				</div>
+				<!-- Shopping Cart (Appended later)-->
 				<div class="shopping-cart">
 					<div id="cart-header">
 						<img id="cart-image" src="/static/images/icons/shopping-cart.svg">
@@ -104,6 +107,7 @@
 				</div>	
 			</div>
 		</div>
+		<!-- Submit text to be reviewed by JavaScript and sent to Flask -->
 		<form id="chat-form">
 			<h3 id="form-parameters">PLACEHOLDER</h3>
 			<div id="form-wrapper">

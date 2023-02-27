@@ -1,6 +1,7 @@
 /*                     */
 /* All Across the Page */
 /*                     */
+
 @import url('https://fonts.googleapis.com/css2?family=Cousine&display=swap');
 
 .flask-output {
@@ -100,9 +101,31 @@ html, body {
 	justify-content: flex-end;
 }  
 
-#starter {
-	display: none;
+/*              */
+/* Typing Caret */
+/*              */
+
+#cursor {
+	display: inline-block;
+	position: relative;
+	background-color: #FFF;
+	height: 18px;
+	top: 1px;
+	width: 2px;
 }
+
+#cursor[blinking] {
+	animation: blinking 850ms infinite;
+}
+
+@keyframes blinking {
+	0% {opacity: 100%;}
+	100% {opacity: 20%;}
+}
+
+/*                                 */
+/* Bot Options (Choose from items) */
+/*                                 */
 
 .bot-options {
 	display: flex;
@@ -159,83 +182,9 @@ html, body {
 	font-weight: bolder;
 }
 
-/*              */
-/* Typing Caret */
-/*              */
-
-#cursor {
-	display: inline-block;
-	position: relative;
-	background-color: #FFF;
-	height: 18px;
-	top: 1px;
-	width: 2px;
-}
-
-#cursor[blinking] {
-	animation: blinking 850ms infinite;
-}
-
-/*      */
-/* Form */
-/*      */
-
-#chat-form {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	padding: 25px;
-	gap: 10px;
-}
-
-#form-wrapper {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-}
-
-#form-parameters {
-	color: white;
-	font-size: 14px;
-}
-
-#form-input {
-	padding: 10px;
-	border-radius: 5px;
-	background-color: #3c3f42;
-	outline: none;
-	color: white;
-	border: none;
-}
-
-#form-submit {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: row;
-	outline: none;
-	border: none;
-	height: 35px;
-	width: 35px;
-	border-radius: 50%;
-	background-color: #3c3f42;
-}
-
-#form-submit-image {
-	width: 20px;
-	height: 20px;
-}
-
-/*                           */
-/* Dynamic Content Awareness */
-/*                           */
-
-@keyframes blinking {
-	0% {opacity: 100%;}
-	100% {opacity: 20%;}
-}
+/*               */
+/* Shopping Cart */
+/*               */
 
 .shopping-cart {
 	display: flex;
@@ -310,4 +259,56 @@ html, body {
 	font-family: 'Cousine', monospace;
 	font-size: 1.5rem;
 	font-weight: bolder;
+}
+
+/*      */
+/* Form */
+/*      */
+
+#chat-form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: 25px;
+	gap: 10px;
+}
+
+#form-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+#form-parameters {
+	color: white;
+	font-size: 14px;
+}
+
+#form-input {
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #3c3f42;
+	outline: none;
+	color: white;
+	border: none;
+}
+
+#form-submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	outline: none;
+	border: none;
+	height: 35px;
+	width: 35px;
+	border-radius: 50%;
+	background-color: #3c3f42;
+}
+
+#form-submit-image {
+	width: 20px;
+	height: 20px;
 }
