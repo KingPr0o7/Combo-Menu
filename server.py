@@ -37,8 +37,7 @@ def send_data():
 	output_checker = Output_Check(javascript_output, javascript_output_type)
 	# Depending on type, have to change what's returned
 	if javascript_output_type == 'Sandwich Agreement':
-		flask_output = 'What type of sandwich would you like?'
-		flask_output_type = 'Sandwich Selection'
+		flask_output, flask_output_type = output_checker.check()
 		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
 	if javascript_output_type == 'Sandwich Selection':
 		flask_output, flask_output_type = output_checker.check()
@@ -58,6 +57,22 @@ def send_data():
 	elif javascript_output_type == 'Drink Amount':
 		flask_output, flask_output_type, cart_sizes, cart_types, cart_names, cart_prices, cart_total, item_quantity = output_checker.check() # Assignment of variables from functions.py
 		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity})
+	elif javascript_output_type == 'Drink Cart Addition':
+		flask_output, flask_output_type = output_checker.check()
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
+	elif javascript_output_type == 'Fries Agreement':
+		flask_output, flask_output_type = output_checker.check()
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
+	elif javascript_output_type == 'Fries Size Selection':
+		flask_output, flask_output_type = output_checker.check()
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
+	elif javascript_output_type == 'Fries Upgrade':
+		flask_output, flask_output_type = output_checker.check()
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
+	elif javascript_output_type == 'Fries Amount':
+		flask_output, flask_output_type, cart_sizes, cart_types, cart_names, cart_prices, cart_total, item_quantity = output_checker.check() # Assignment of variables from functions.py
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
