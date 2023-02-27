@@ -31,7 +31,13 @@
 	<script defer src="/static/index.js"></script>
 </head>
 <body>
-	<p class="flask-output">{{ python_output }}</p>
+	<p class="flask-output" id="flask-output">{{ flask_output }}</p>
+	<p class="flask-output" id="flask-output-type">{{ flask_output_type }}</p>
+	<p class="flask-output" id="flask-cart-prices">{{ flask_cart_prices }}</p>
+	<p class="flask-output" id="flask-cart-total">{{ flask_cart_total }}</p>
+	<p class="flask-output" id="flask-cart-sizes">{{ flask_cart_sizes }}</p>
+	<p class="flask-output" id="flask-cart-types">{{ flask_cart_types }}</p>
+	<p class="flask-output" id="flask-cart-names">{{ flask_cart_names }}</p>
 	<div id="titlebar">
 		<img id="titlebar-logo" src="static/images/icons/logo.png">
 		<span id="titlebar-name">Combo Menu Interface</span>
@@ -39,19 +45,71 @@
 	<div id="content">
 		<div id="chat">
 			<div id="chat-wrapper">
-				<div class="bot-chat">
+				<div class="bot-chat" active>
 					<img class="bot-pfp" src="static/images/icons/computer.svg">
-					<span class="bot-msg">Waiting...<span id="cursor" blinking></span></span>
+					<div class="bot-msg-wrapper" active>
+						<span class="bot-msg" active>Waiting...<span id="cursor" blinking></span></span>
+						<div class="bot-options">
+							<div class="item-option">
+								<div class="item-option-header">
+									<img class="item-option-image" src="static/images/icons/sandwich.svg">
+									<p class="item-option-title">Beef Sandwich</p> 
+								</div>
+								<div class="item-details">
+									<div class="item-details-price">
+										<p class="item-label">Price</p>
+										<p class="item-price">$X.XX</p>
+									</div>
+									<div class="item-details-size">
+										<p class="item-label">Size</p>
+										<p class="item-size">PLACEHOLDER</p>
+									</div>
+									<div class="item-details-type">
+										<p class="item-label">Type</p>
+										<p class="item-type">PLACEHOLDER</p>
+									</div>
+									<div class="item-details-name">
+										<p class="item-label">Name</p>
+										<p class="item-name">PLACEHOLDER</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="human-chat" id="starter-human-chat">
+				<div class="human-chat" id="starter">
 					<span class="human-msg">PLACEHOLDER</span>
 					<img class="human-pfp" src="static/images/icons/user.svg">
 				</div>
+				<div class="shopping-cart">
+					<div id="cart-header">
+						<img id="cart-image" src="/static/images/icons/shopping-cart.svg">
+						<h1 id="cart-title">Your Cart</h1>
+					</div>
+					<div id="cart-items-wrapper">
+						<div class="cart-item-container">
+							<img class="cart-item-image" src="/static/images/icons/sandwich.svg">
+							<div class="cart-item-desc">
+								<h1 class="cart-item-name">PLACEHOLDER</h1>
+								<h2 class="cart-item-attr">Size: PLACEHOLDER</h2>
+							</div>
+							<h1 class="cart-item-price">$X.XX</h1>
+						</div>
+					</div>
+					<hr>
+					<div class="cart-footer">
+						<p class="cart-discount">Discount: $X.XX</p>
+						<p class="cart-total">Total: $X.XX</p>
+					</div>
+				</div>	
 			</div>
 		</div>
 		<form id="chat-form">
-			<input id="form-input" type="text" placeholder="Type Here!">
-			<button id="form-submit"><img id="form-submit-image" src="static/images/icons/send.svg"></button>
+			<h3 id="form-parameters">PLACEHOLDER</h3>
+			<div id="form-wrapper">
+				<input id="form-input" type="text" placeholder="Type Here!">
+				<button id="form-submit"><img id="form-submit-image" src="static/images/icons/send.svg"></button>
+			</div>
 		</form>
 	</div>
 </body>

@@ -3,6 +3,10 @@
 /*                     */
 @import url('https://fonts.googleapis.com/css2?family=Cousine&display=swap');
 
+.flask-output {
+	color: white;
+}
+
 * {
 	box-sizing: border-box;
 	font-family: 'Cousine', monospace;
@@ -77,7 +81,7 @@ html, body {
 	padding: 10px;
 	display: flex;
 	align-items: center;
-	width: 40%;
+	width: 100%;
 }
 
 .bot-pfp, .human-pfp {
@@ -85,7 +89,7 @@ html, body {
 	height: 48px;
 }
 
-.bot-msg, .human-msg {
+.bot-msg, .bot-msg-past, .human-msg {
 	color: white;
 	width: 100%;
 	padding: 10px;
@@ -94,10 +98,65 @@ html, body {
 .human-msg {
 	display: flex;
 	justify-content: flex-end;
+}  
+
+#starter {
+	display: none;
 }
 
-#starter-human-chat {
-	visibility: hidden;
+.bot-options {
+	display: flex;
+	align-self: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 10px;
+	gap: 10px;
+}
+
+.item-option {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background-color: #3c3f42;
+	border-radius: 10px;
+	padding: 10px;
+	gap: 10px;
+	margin-left: 10px;
+}
+
+.item-option-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.item-option-title {
+	color: white;
+	font-size: 18px;
+	font-weight: bolder;
+}
+
+.item-details {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+}
+
+.item-details > * {
+	color: white;
+	text-align: center;
+}
+
+.item-option-image {
+	width: 32px;
+	height: 32px;
+}
+
+.item-label {
+	font-weight: bolder;
 }
 
 /*              */
@@ -125,8 +184,21 @@ html, body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 	padding: 25px;
 	gap: 10px;
+}
+
+#form-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+#form-parameters {
+	color: white;
+	font-size: 14px;
 }
 
 #form-input {
@@ -160,17 +232,82 @@ html, body {
 /* Dynamic Content Awareness */
 /*                           */
 
-@media screen and (max-width: 730px) {
-	.bot-chat, .human-chat {
-		width: 80%;
-	}
-}
-
 @keyframes blinking {
 	0% {opacity: 100%;}
 	100% {opacity: 20%;}
 }
 
-.flask-output {
-	display: none;
+.shopping-cart {
+	display: flex;
+	align-self: center;
+	justify-content: center;
+	flex-direction: column;
+	margin-top: 10px;
+	padding: 10px;
+	gap: 10px;
+	border-radius: 10px;
+	margin-left: 10px;
+	background-color: #3c3f42;
+}
+
+#cart-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+#cart-title {
+	color: white;
+	font-family: 'Cousine', monospace;
+}
+
+#cart-image {
+	width: 32px;
+	height: 32px;
+}
+
+.cart-items-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 25px;
+}
+
+.cart-item-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.cart-item-image {
+	width: 32px;
+	height: 32px;
+}
+
+.cart-item-name {
+	font-family: 'Cousine', monospace;
+	color: white;
+	font-size: 1.2rem;
+}
+
+.cart-item-attr {
+	font-family: 'Cousine', monospace;
+	color: white;
+	font-size: 1rem;
+}
+
+.cart-item-price {
+	font-family: 'Cousine', monospace;
+	color: lime;
+}
+
+.cart-discount, .cart-total {
+	text-align: center;
+	color: white;
+	font-family: 'Cousine', monospace;
+	font-size: 1.5rem;
+	font-weight: bolder;
 }
