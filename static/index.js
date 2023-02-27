@@ -7,6 +7,7 @@ const sandwich_prices = [5.25, 6.25, 5.75] // Chicken, Beef, and Tofu
 const drink_prices = [1.00, 1.75, 2.25] // Small, Medium, and Large
 const fries_prices = [1.00, 1.50, 2.00] // Small, Medium, and Large
 const size_typecases = ['small', 'medium', 'large', 's', 'm', 'l'];
+const agreement_typecases = ['y', 'yes', 'n', 'no'];
 var bot_typing_status = false;
 var chat_count = 1;
 var current_bot_message = ''
@@ -138,6 +139,9 @@ function send_bot_message(msg) {
 	current_bot_message = msg;
 	flask_output_type = document.getElementById('flask-output-type').textContent;
 	// Typecase reminder
+	if (flask_output_type == 'Sandwich Agreement' || flask_output_type == 'Drink Agreement') {
+		form_parameters.textContent = '(Y)es (N)o';
+	}
 	if (flask_output_type == 'Sandwich Selection') {
 		form_parameters.textContent = '(C)hicken, (B)eef, or (T)ofu'
 	} else if (flask_output_type == 'Sandwich Amount') {
@@ -159,6 +163,11 @@ function send_user_message(msg) {
 	chat.scrollBy(0, 2000);
 	cursor.remove()
 	current_user_message = msg;
+	if (msg == 'n' || msg == 'no') {
+		if (flask_output_type == 'Sandwich Agreement') {
+			flask_output_type = 'Sandwich Cart Addition';
+		}
+	}
 	handshake()
 }
 
@@ -225,7 +234,7 @@ function post_item_options() {
 		add_item_option(new_item_options, 2, 'Fountain Drink', 'Large', 'Drink', 'Fountain');
 	}
 	document.querySelector('.bot-msg-wrapper[active]').append(new_item_options);
-	document.querySelector('.bot-chat').style.alignItems = 'flex-start';
+	document.querySelector('.bot-chat[active]').style.alignItems = 'flex-start';
 }
 
 // Shows every item ordered with each items' details
@@ -300,7 +309,15 @@ function input_border(toggle) {
 form.addEventListener('submit', function(event) {
 	event.preventDefault();
 	if (bot_typing_status == false) {
-		if (flask_output_type == 'Sandwich Selection') {
+		if (flask_output_type == 'Sandwich Agreement' || flask_output_type == 'Drink Agreement') {
+			if (!agreement_typecases.includes(form_input.value.toLowerCase().trim())) {
+				input_border(true);
+			} else {
+				input_border(false);
+				send_user_message(form_input.value);
+				form_input.value = '';
+			}			
+		} else if (flask_output_type == 'Sandwich Selection') {
 			if (!sandwich_typecases.includes(form_input.value.toLowerCase().trim())) {
 				input_border(true);
 			} else {
@@ -308,7 +325,7 @@ form.addEventListener('submit', function(event) {
 				send_user_message(form_input.value);
 				form_input.value = '';
 			}
-		} else if (flask_output_type == 'Sandwich Amount') {
+		} else if (flask_output_type == 'Sandwich Amount' || flask_output_type == 'Drink Amount') {
 			if (parseInt(form_input.value) !== 0 && parseInt(form_input.value) > 0) {
 				input_border(false);
 				send_user_message(form_input.value);
@@ -323,14 +340,6 @@ form.addEventListener('submit', function(event) {
 				input_border(false);
 				send_user_message(form_input.value);
 				form_input.value = '';
-			}			
-		} else if (flask_output_type == 'Drink Amount') {
-			if (parseInt(form_input.value) !== 0 && parseInt(form_input.value) > 0) {
-				input_border(false);
-				send_user_message(form_input.value);
-				form_input.value = '';
-			} else {
-				input_border(true);
 			}			
 		}
 	}

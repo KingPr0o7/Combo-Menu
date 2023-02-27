@@ -41,9 +41,13 @@ class Output_Check():
 			self.python_output_type = 'Sandwich Cart Addition'
 			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity
 		elif self.js_output_type == 'Sandwich Cart Addition':
+			self.python_output = 'Would you like a fountain drink?'
+			self.python_output_type = 'Drink Agreement'
+			return self.python_output, self.python_output_type
+		elif self.js_output_type == 'Drink Agreement':
 			self.python_output = 'What size of drink would you like?'
 			self.python_output_type = 'Drink Size Selection'
-			return self.python_output, self.python_output_type
+			return self.python_output, self.python_output_type      
 		elif self.js_output_type == 'Drink Size Selection':
 			if self.js_output in self.small_typecases:
 				self.drink_size = 'Small'

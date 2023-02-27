@@ -13,8 +13,8 @@ javascript_output_type = None
 # Startup (First output to JavaScript)
 @app.route('/')
 def index():
-	flask_output = 'What type of sandwich would you like?'
-	flask_output_type = 'Sandwich Selection'
+	flask_output = 'Would you like a sandwich?'
+	flask_output_type = 'Sandwich Agreement'
 	return render_template('index.html', flask_output=flask_output, flask_output_type=flask_output_type)
 
 # Fetch JavaScript output and save to Flask
@@ -27,7 +27,6 @@ def my_route():
 	javascript_output_type = request.json['javascript_output_type']
 	response_data = {'result': f'[POST | 200] Output: {javascript_output} & Output_Type: {javascript_output_type}'} # Verify Results
 	if javascript_output_type == 'Sandwich Cart Addition':
-		print('ASDASASDASD')
 		send_data()
 	return jsonify(response_data) # Verify Results
 
@@ -37,6 +36,10 @@ def send_data():
 	print(javascript_output, javascript_output_type)
 	output_checker = Output_Check(javascript_output, javascript_output_type)
 	# Depending on type, have to change what's returned
+	if javascript_output_type == 'Sandwich Agreement':
+		flask_output = 'What type of sandwich would you like?'
+		flask_output_type = 'Sandwich Selection'
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
 	if javascript_output_type == 'Sandwich Selection':
 		flask_output, flask_output_type = output_checker.check()
 		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
@@ -46,6 +49,9 @@ def send_data():
 	elif javascript_output_type == 'Sandwich Cart Addition':
 		flask_output, flask_output_type = output_checker.check()
 		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
+	elif javascript_output_type == 'Drink Agreement':
+		flask_output, flask_output_type = output_checker.check()
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
 	elif javascript_output_type == 'Drink Size Selection':
 		flask_output, flask_output_type = output_checker.check()
 		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
