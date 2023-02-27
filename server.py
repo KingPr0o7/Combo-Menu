@@ -37,57 +37,14 @@ def send_data():
 	output_checker = Output_Check(javascript_output, javascript_output_type)
 	print(javascript_output, javascript_output_type)
 	# Depending on type, have to change what's returned
-	if javascript_output_type == 'Sandwich Agreement':
+	statement_returns = ['Sandwich Agreement', 'Sandwich Selection', 'Sandwich Cart Addition', 'Drink Agreement', 'Drink Size Selection', 'Drink Cart Addition', 'Fries Agreement', 'Fries Size Selection', 'Fries Upgrade', 'Fries Cart Addition', 'Ketchup Agreement', 'Ketchup Cart Addition', 'Done!']
+	cart_returns = ['Sandwich Amount', 'Drink Amount', 'Fries Amount', 'Ketchup Amount']
+	if javascript_output_type in statement_returns:
 		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
-	elif javascript_output_type == 'Sandwich Selection':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
-	elif javascript_output_type == 'Sandwich Amount':
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})	
+	elif javascript_output_type in cart_returns:
 		flask_output, flask_output_type, cart_sizes, cart_types, cart_names, cart_prices, cart_total, item_quantity, coupon_eligibility = output_checker.check() # Assignment of variables from functions.py
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity, 'flask_coupon_eligibility': coupon_eligibility})
-	elif javascript_output_type == 'Sandwich Cart Addition':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
-	elif javascript_output_type == 'Drink Agreement':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
-	elif javascript_output_type == 'Drink Size Selection':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})
-	elif javascript_output_type == 'Drink Amount':
-		flask_output, flask_output_type, cart_sizes, cart_types, cart_names, cart_prices, cart_total, item_quantity, coupon_eligibility = output_checker.check() # Assignment of variables from functions.py
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity, 'flask_coupon_eligibility': coupon_eligibility})
-	elif javascript_output_type == 'Drink Cart Addition':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
-	elif javascript_output_type == 'Fries Agreement':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
-	elif javascript_output_type == 'Fries Size Selection':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
-	elif javascript_output_type == 'Fries Upgrade':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
-	elif javascript_output_type == 'Fries Amount':
-		flask_output, flask_output_type, cart_sizes, cart_types, cart_names, cart_prices, cart_total, item_quantity, coupon_eligibility = output_checker.check() # Assignment of variables from functions.py
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity, 'flask_coupon_eligibility': coupon_eligibility})
-	elif javascript_output_type == 'Fries Cart Addition':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})				
-	elif javascript_output_type == 'Ketchup Agreement':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})		
-	elif javascript_output_type == 'Ketchup Amount':
-		flask_output, flask_output_type, cart_sizes, cart_types, cart_names, cart_prices, cart_total, item_quantity, coupon_eligibility = output_checker.check() # Assignment of variables from functions.py
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity, 'flask_coupon_eligibility': coupon_eligibility})
-	elif javascript_output_type == 'Ketchup Cart Addition':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})			
-	elif javascript_output_type == 'Done!':
-		flask_output, flask_output_type = output_checker.check()
-		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type})				
+		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity, 'flask_coupon_eligibility': coupon_eligibility})		
 
 if __name__ == '__main__':
     app.run(debug=True)

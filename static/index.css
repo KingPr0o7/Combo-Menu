@@ -4,8 +4,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cousine&display=swap');
 
+/* Toggle to color to see debug of FLASK */
 .flask-output {
-	color: white;
+	display: none;
 }
 
 * {
@@ -255,10 +256,14 @@ html, body {
 
 .cart-discount, .cart-total {
 	text-align: center;
-	color: white;
+	color: lime;
 	font-family: 'Cousine', monospace;
 	font-size: 1.5rem;
 	font-weight: bolder;
+}
+
+.cart-discount {
+	color: darkorange;
 }
 
 /*      */
