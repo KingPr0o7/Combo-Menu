@@ -21,6 +21,7 @@ var flask_cart_types = document.getElementById('flask-cart-types').textContent;
 var flask_cart_names = document.getElementById('flask-cart-names').textContent;
 var flask_cart_total = document.getElementById('flask-cart-total').textContent;
 var flask_item_quantity = document.getElementById('flask-item-quantity').textContent;
+var flask_coupon_eligibility = document.getElementById('flask-coupon-eligibility').textContent;
 
 // Elements
 const chat = document.getElementById('chat');
@@ -41,6 +42,7 @@ var cart = document.querySelector('.shopping-cart');
 const cart_item_wrapper = document.querySelector('.cart-item-container');
 var total = 0
 cart_item_wrapper.remove();
+var cart_discount = document.querySelector('.cart-discount');
 cart.remove();
 
 const form = document.getElementById('chat-form');
@@ -61,6 +63,7 @@ function updateVariables() {
 	flask_cart_names = document.getElementById('flask-cart-names').textContent;
 	flask_cart_total = document.getElementById('flask-cart-total').textContent;
 	flask_item_quantity = document.getElementById('flask-item-quantity').textContent;
+	flask_coupon_eligibility = document.getElementById('flask-coupon-eligibility').textContent;
 }
 
 // Flask to JavaScript
@@ -84,6 +87,7 @@ function fetchVariables() {
 		document.getElementById('flask-cart-names').textContent = data.flask_cart_names;
 		document.getElementById('flask-cart-total').textContent =  data.flask_cart_total;
 		document.getElementById('flask-item-quantity').textContent = data.flask_item_quantity;
+		document.getElementById('flask-coupon-eligibility').textContent = data.flask_coupon_eligibility;
 		updateVariables()
 
 		send_bot_message(data.flask_output);
@@ -191,7 +195,6 @@ function type(targetElement, textToType, speed, index) {
 	} else {
 		// When message is done being typed and other things can be added
 		cursor.setAttribute('blinking', '');
-		bot_typing_status = false;
 		if (flask_output_type == 'Sandwich Selection' || flask_output_type == 'Drink Size Selection' || flask_output_type == 'Fries Size Selection' || flask_output_type == 'Ketchup Amount') {
 			post_item_options();
 		} else if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition' || flask_output_type == 'Fries Cart Addition' || flask_output_type == 'Ketchup Cart Addition') {
@@ -203,6 +206,7 @@ function type(targetElement, textToType, speed, index) {
 		document.querySelector('.bot-msg-wrapper[active]').removeAttribute('active');
 		document.querySelector('.bot-chat[active]').removeAttribute('active');
 		chat.scrollBy(0, 2000);
+		bot_typing_status = false;
 	}
 }
 
@@ -285,7 +289,6 @@ function show_cart() {
 		}
 		new_cart.insertBefore(items_wrapper, new_cart.children[1]);
 	} else {
-		console.log(names, sizes, types, prices);
 		item_wrapper.querySelector('.cart-item-name').textContent = `${names.charAt(0).toUpperCase() + names.slice(1)} ${types}`;
 		item_wrapper.querySelector('.cart-item-attr').textContent = `Size: ${sizes}`;
 		item_wrapper.querySelector('.cart-item-price').textContent = `$${parseFloat(prices).toFixed(2)}`;
@@ -298,17 +301,24 @@ function show_cart() {
 		}
 		items_wrapper.appendChild(item_wrapper);
 		new_cart.insertBefore(items_wrapper, new_cart.children[1]);
-		console.log(items_wrapper)
-	}
-	if (new_cart.querySelector('.cart-discount')) {
-		new_cart.querySelector('.cart-discount').remove();
 	}
 	total = parseFloat(total) + parseFloat(item_total);
+	if (flask_coupon_eligibility == 'false') {
+		if (new_cart.querySelector('.cart-discount')) {
+			new_cart.querySelector('.cart-discount').remove();
+		}
+	} else if (flask_coupon_eligibility == 'true') {
+		if (!new_cart.querySelector('.cart-discount')) {
+			cart_discount.textContent = 'Discount: $1.00';
+			new_cart.querySelector('.cart-footer').appendChild(cart_discount);
+			total = total - 1;
+		}
+	}
 	new_cart.querySelector('.cart-total').textContent = `Total: $${total.toFixed(2)}`;
 	document.querySelector('.bot-msg-wrapper[active]').append(new_cart);
 	document.querySelector('.bot-chat[active]').style.alignItems = 'flex-start';
 	cart = new_cart;
-	if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition' || flask_output_type == 'Fries Cart Addition' || flask_output_type == 'Ketchup Cart Addition') {
+	if (flask_output_type == 'Sandwich Cart Addition' || flask_output_type == 'Drink Cart Addition' || flask_output_type == 'Fries Cart Addition' || flask_output_type == 'Fries Upgrade' || flask_output_type == 'Ketchup Cart Addition') {
 		handshake()
 	}
 }

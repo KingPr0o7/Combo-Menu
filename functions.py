@@ -1,17 +1,17 @@
-# Global variables
-current_sandwich = ''
 item_types = []
 
 # Checks JS outputs from server.py and returns outputs for JS.
 class Output_Check():
 	def __init__(self, javascript_output, javascript_output_type):
 		global cart
+		global current_sandwich
 
 		self.chicken_typecases = ['c', 'chicken']
 		self.beef_typecases = ['b', 'beef']
 		self.tofu_typecases = ['t', 'tofu']
 		self.small_typecases = ['s', 'small']
 		self.medium_typecases = ['m', 'medium']
+		current_sandwich = ''
 		self.large_typecases = ['l', 'large']
 		if javascript_output_type == 'Sandwich Selection' or javascript_output_type == 'Drink Size Selection':
 			self.js_output = str(javascript_output).lower().strip()
@@ -42,10 +42,10 @@ class Output_Check():
 			self.python_output_type = 'Sandwich Amount'
 			return self.python_output, self.python_output_type
 		elif self.js_output_type == 'Sandwich Amount':
-			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity = cart.add('Regular', 'Sandwich', current_sandwich, self.js_output)	
+			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility = cart.add('Regular', 'Sandwich', current_sandwich, self.js_output)	
 			self.python_output = quantity_fixer(self.item_quantity, current_sandwich.lower(), str(self.cart_types[0]).lower())
 			self.python_output_type = 'Sandwich Cart Addition'
-			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity
+			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility
 		elif self.js_output_type == 'Sandwich Cart Addition':
 			self.python_output = 'Would you like a fountain drink?'
 			self.python_output_type = 'Drink Agreement'
@@ -66,10 +66,10 @@ class Output_Check():
 			self.python_output_type = 'Drink Amount'
 			return self.python_output, self.python_output_type
 		elif self.js_output_type == 'Drink Amount':
-			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity = cart.add(current_drink_size, 'Drink', 'Fountain', self.js_output)	
+			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility = cart.add(current_drink_size, 'Drink', 'Fountain', self.js_output)	
 			self.python_output = quantity_fixer(self.item_quantity, 'fountain', 'drink')
 			self.python_output_type = 'Drink Cart Addition'
-			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity			
+			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility			
 		elif self.js_output_type == 'Drink Cart Addition':
 			self.python_output = 'Would you like some fries?'
 			self.python_output_type = 'Fries Agreement'
@@ -100,10 +100,10 @@ class Output_Check():
 			self.python_output_type = 'Fries Amount'	
 			return self.python_output, self.python_output_type  	
 		elif self.js_output_type == 'Fries Amount':
-			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity = cart.add(current_fries_size, 'Fries', 'French', self.js_output)	
+			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility = cart.add(current_fries_size, 'Fries', 'French', self.js_output)	
 			self.python_output = quantity_fixer(self.item_quantity, 'french', 'fries')
 			self.python_output_type = 'Fries Cart Addition'
-			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity	
+			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility	
 		elif self.js_output_type == 'Fries Cart Addition':
 			self.python_output = 'Would you like some ketchup packets?'	
 			self.python_output_type = 'Ketchup Agreement'	
@@ -113,10 +113,10 @@ class Output_Check():
 			self.python_output_type = 'Ketchup Amount'
 			return self.python_output, self.python_output_type    				
 		elif self.js_output_type == 'Ketchup Amount':
-			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity = cart.add('Regular', 'Packet', 'Ketchup', self.js_output)	
+			self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility = cart.add('Regular', 'Packet', 'Ketchup', self.js_output)	
 			self.python_output = quantity_fixer(self.item_quantity, 'ketchup', 'packet')
 			self.python_output_type = 'Ketchup Cart Addition'
-			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity			
+			return self.python_output, self.python_output_type, self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligibility	
 		elif self.js_output_type == 'Ketchup Cart Addition':
 			self.python_output = 'Your order is below! Thank you for shopping with us!'
 			self.python_output_type = 'Done!'
@@ -146,6 +146,10 @@ def quantity_fixer(quantity, item, type):
 		elif type == 'packet':
 			return f'Okay! Added {quantity} {item} {type}s to the cart!'
 
+def clear_item_types():
+    global item_types
+    item_types = []
+
 # Stores and sends variables for the cart.
 class Cart():
 	def __init__(self):
@@ -155,6 +159,10 @@ class Cart():
 		self.cart_sizes = []
 		self.cart_types = []
 		self.cart_names = []
+		self.has_sandwich = None
+		self.has_drink = None
+		self.has_fries = None
+		self.coupon_eligible = False 
 		self.sandwich_prices = [5.25, 6.25, 5.75] # Chicken, Beef, and Tofu
 		self.drink_prices = [1.00, 1.75, 2.25] # Small, Medium, and Large
 		self.fries_prices = [1.00, 1.50, 2.00] # Small, Medium, and Large
@@ -208,6 +216,19 @@ class Cart():
 			self.cart_names.append(self.item_name)
 			self.cart_prices.append(self.item_price)
 		item_types.append(self.cart_types[0])
+		print(item_types)
+		for item in item_types:
+			if item == 'Sandwich':
+				self.has_sandwich = True
+			if item == 'Drink':
+				self.has_drink = True
+			if item == 'Fries':
+				self.has_fries = True
+		if self.has_sandwich == True:
+			if self.has_drink == True:
+				if self.has_fries == True:
+					self.coupon_eligible = True
+		print(self.has_sandwich, self.has_drink, self.has_fries, self.coupon_eligible)
 		self.cart_total = sum(self.cart_prices)
 		self.cart_total = '{:.2f}'.format(self.cart_total)
-		return self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity
+		return self.cart_sizes, self.cart_types, self.cart_names, self.cart_prices, self.cart_total, self.item_quantity, self.coupon_eligible
