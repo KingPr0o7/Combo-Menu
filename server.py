@@ -47,4 +47,4 @@ def send_data():
 		return jsonify({'flask_output': flask_output, 'flask_output_type': flask_output_type, 'flask_cart_sizes': cart_sizes, 'flask_cart_types': cart_types, 'flask_cart_names': cart_names, 'flask_cart_prices': cart_prices, 'flask_cart_total': cart_total, 'flask_item_quantity': item_quantity, 'flask_coupon_eligibility': coupon_eligibility})		
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
