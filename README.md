@@ -1,8 +1,13 @@
 <img align="center" src="images/preview_screenshot.png" alt="Preview Screenshot">
 
-<h1 align="center">Combo Menu - CLI/GUI</h1>
+<h1 align="center">Combo Menu - CLI/GUI [PLTW]</h1>
 
-### A way to order menu items, such as sandwiches to ketchup packets, and see each item detail and your full cart! Like a CLI? Choose `Release: v1.0.0`! Like a website with live interactions? Choose `Release: v2.0.0`!
+### Combo Menu is a web application allowing you to order fast food items and get combo deals if your order meets the requirements. Styled as a chat application, you can submit your response and have *live* feedback! 
+
+*Choose your style for this project based on the project's version.*
+
+# Disclaimer
+Combo Menu is a computer science project **inspired by Project Lead The Way (PLTW)**. PLTW is a non-profit organization that provides education in various fields, including computer science and engineering. Please acknowledge and appreciate PLTW's contributions to computer science education and attribute the inspiration for this project to their guidelines.
 
 # Versions
 ### `v1.0.0`
@@ -27,4 +32,4 @@ Release version `v.2.0.0` is a strictly **GUI-based** interface using **HTML**, 
 5. `Crtl` + `Left Click` on the local host link to open and view the program.
 
 # License
-### **MIT**
+### The [MIT LICENSE](https://github.com/KingPr0o7/Combo-Menu/blob/main/LICENSE) grants permission to use and modify this project.
