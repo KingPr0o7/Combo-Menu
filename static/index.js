@@ -160,6 +160,7 @@ function send_bot_message(msg) {
 
 // Send user message
 function send_user_message(msg) {
+	msg = msg.toLowerCase();
 	chat_count++;
 	let clone = user_chat.cloneNode(true);
 	clone.children[0].innerHTML = msg;
