@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+import functions
 from functions import Output_Check, clear_item_types
 import jyserver.Flask as jsf
 
